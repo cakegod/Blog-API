@@ -1,0 +1,25 @@
+{
+  "name": "express-nextjs-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "dev": "concurrently \"cd ./server && npm run start:dev\" \"cd ./client && npm run next start\"",
+    "start": "concurrently \"cd ./server && npm run start\" \"cd ./client && npm run next start\"",
+    "build": "concurrently \"cd ./server && npm run build\" \"cd ./client && npm run next build\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cakegod/Express-NextJS-Template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cakegod/Express-NextJS-Template/issues"
+  },
+  "homepage": "https://github.com/cakegod/Express-NextJS-Template#readme",
+  "dependencies": {
+    "concurrently": "^7.4.0"
+  }
+}
