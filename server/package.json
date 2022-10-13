@@ -1,5 +1,5 @@
 {
-	"name": "members-only",
+	"name": "blog-api",
 	"version": "1.0.0",
 	"description": "",
 	"main": "dist/index.js",
@@ -12,15 +12,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/cakegod/Members-Only.git"
+		"url": "git+https://github.com/cakegod/Blog-API.git"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "GNU GPL v3",
 	"bugs": {
-		"url": "https://github.com/cakegod/Members-Only/issues"
+		"url": "https://github.com/cakegod/Blog-API/issues"
 	},
-	"homepage": "https://github.com/cakegod/Members-Only",
+	"homepage": "https://github.com/cakegod/Blog-API",
 	"dependencies": {
 		"async": "^3.2.4",
 		"bcryptjs": "^2.4.3",
