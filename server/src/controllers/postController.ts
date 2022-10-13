@@ -9,7 +9,7 @@ import { Post } from '../models/Post';
 
 const postController = {
 	getPosts: (req: Request, res: Response, next: NextFunction) =>
-		Post.find({}).exec((err, result) => {
+		Post.find({"$set":{"published":true}}, "title description date").exec((err, result) => {
 			if (err) {
 				return next(err);
 			}
