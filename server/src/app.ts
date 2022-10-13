@@ -10,9 +10,10 @@ import session from 'express-session';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import blogRouter from './routes/blog';
-
+import indexRouter from './routes/index'
 import CHttpException from './types';
 import cors from 'cors';
+import { User } from './models/User';
 
 // Init dotenv
 config();
@@ -64,6 +65,8 @@ app.use(express.static(path.join(__dirname, '../', 'public')));
 app.set('views', path.join(__dirname, '../', 'views'));
 app.set('view engine', 'pug');
 
+
+app.use('/', indexRouter)
 // Blog route
 app.use('/blog', blogRouter);
 
@@ -84,36 +87,36 @@ app.use((err: CHttpException, req: Request, res: Response) => {
 	res.render('error');
 });
 
-// passport.use(
-// 	new LocalStrategy((username, password, done) => {
-// 		User.findOne({ username }).exec((err, user) => {
-// 			if (err) {
-// 				return done(err);
-// 			}
-// 			if (!user) {
-// 				return done(null, false, { message: 'Incorrect username' });
-// 			}
-// 			bcrypt.compare(password, user.password, (_err, res) => {
-// 				if (_err) {
-// 					return done(_err);
-// 				}
-// 				if (res) {
-// 					return done(null, user);
-// 				}
-// 				return done(null, false, { message: 'Incorrect password' });
-// 			});
-// 		});
-// 	})
-// );
+passport.use(
+	new LocalStrategy((username, password, done) => {
+		User.findOne({ username }).exec((err, user) => {
+			if (err) {
+				return done(err);
+			}
+			if (!user) {
+				return done(null, false, { message: 'Incorrect username' });
+			}
+			bcrypt.compare(password, user.password, (_err, res) => {
+				if (_err) {
+					return done(_err);
+				}
+				if (res) {
+					return done(null, user);
+				}
+				return done(null, false, { message: 'Incorrect password' });
+			});
+		});
+	})
+);
 
-// passport.serializeUser((user, done) => {
-// 	done(null, user.id);
-// });
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+});
 
-// passport.deserializeUser((id, done) => {
-// 	User.findById(id).exec((err, user) => {
-// 		done(err, user);
-// 	});
-// });
+passport.deserializeUser((id, done) => {
+	User.findById(id).exec((err, user) => {
+		done(err, user);
+	});
+});
 
 export default app;
