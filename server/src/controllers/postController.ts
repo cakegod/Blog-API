@@ -47,7 +47,7 @@ const postController = {
 				title: req.body.title,
 				description: req.body.description,
 				content: req.body.content,
-				readTime: Math.ceil(req.body.content.trim().split(/\s+/).length / 250) + ' min reading time',
+				readTime: Math.ceil(req.body.content.trim().split(/\s+/).length / 250) + ' min read',
 				date: Date.now(),
 			});
 
