@@ -1,6 +1,7 @@
 import { IPost } from '@/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 // export const getStaticProps =  async (context) => {
 //   // Fetch data from external API
@@ -32,7 +33,26 @@ function Post() {
     fetchPosts();
   }, []);
 
-  return <div className='text-gray-100'>{post && post.content}</div>;
+  return (
+    <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors'>
+      {post && (
+        <>
+          <h2 className='m-0 text-violet-700 dark:text-violet-400'>{post.title}</h2>
+          <p className='font-medium'>
+            {new Intl.DateTimeFormat('en-GB', {
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+            }).format(Date.parse(post.date))}{' '}
+            - {Math.ceil(post.content.trim().split(/\s+/).length / 250)} min reading
+            time
+          </p>
+          <ReactMarkdown>{`${post.content}
+`}</ReactMarkdown>
+        </>
+      )}
+    </article>
+  );
 }
 
 export default Post;
