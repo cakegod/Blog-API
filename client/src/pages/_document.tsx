@@ -9,9 +9,11 @@ export default function Document() {
           rel='stylesheet'
         ></link>
       </Head>
-      <body className='h-full w-full bg-slate-100 dark:bg-gray-800 p-6'>
-        <Main />
-        <NextScript />
+      <body className='min-h-screen w-full overflow-y-scroll bg-slate-100 dark:bg-gray-800 py-14 px-6 flex justify-center'>
+        <div className='max-w-3xl w-full'>
+          <Main />
+          <NextScript />
+        </div>
       </body>
     </Html>
   );
