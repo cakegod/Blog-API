@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <>
       <AboutMe></AboutMe>
-      <main className='flex flex-col gap-10'>
+      <main className='flex flex-col gap-10 grow'>
         <Posts postsData={postsData} />
       </main>
     </>

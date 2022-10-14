@@ -3,19 +3,21 @@ import Head from 'next/head';
 import { AppProps } from 'next/app';
 import Header from '@/components/Header';
 import { ThemeProvider } from 'next-themes';
+import Footer from '@/components/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <div className='min-h-screen flex flex-col'>
       <ThemeProvider attribute='class'>
-      <Head>
-        <title></title>
-        <meta></meta>
-      </Head>
-      <Header />
+        <Head>
+          <title></title>
+          <meta></meta>
+        </Head>
+        <Header />
         <Component {...pageProps} />
       </ThemeProvider>
-    </>
+      <Footer />
+    </div>
   );
 }
 

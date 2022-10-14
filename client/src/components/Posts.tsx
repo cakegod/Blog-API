@@ -15,12 +15,9 @@ function Posts({ postsData }: Props) {
     <>
       {postsData.map((post) => {
         return (
-          <Link
-          key={post._id}
-            href={`/blog/${post._id}`}
-          >
-            <section  className='cursor-pointer'>
-              <h2 className='text-xl md:text-2xl text-amber-700 dark:text-amber-400 font-semibold hover:hue-rotate-180 contrast-[.85] transition-all duration-500'>
+          <Link key={post._id} href={`/blog/${post._id}`}>
+            <section>
+              <h2 className='text-xl md:text-2xl text-violet-700 dark:text-violet-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 contrast-[.85] transition-all duration-500 cursor-pointer'>
                 {post.title}
               </h2>
               <h3 className='text-sm text-gray-900 dark:text-gray-300'>

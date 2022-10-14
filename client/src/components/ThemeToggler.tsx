@@ -18,7 +18,7 @@ function ThemeToggler() {
         {theme === 'light' ? (
           <SunIcon className='w-8 text-amber-400' />
         ) : (
-          <MoonIcon className='w-8 text-indigo-400' />
+          <MoonIcon className='w-8 text-blue-400' />
         )}
       </button>
     </div>
