@@ -9,12 +9,14 @@ import { Post } from '../models/Post';
 
 const postController = {
 	getPosts: (req: Request, res: Response, next: NextFunction) =>
-		Post.find({"$set":{"published":true}}, "title description date").exec((err, result) => {
-			if (err) {
-				return next(err);
+		Post.find({ $set: { published: true } }, 'title description date').exec(
+			(err, result) => {
+				if (err) {
+					return next(err);
+				}
+				res.json(result);
 			}
-			res.json(result);
-		}),
+		),
 
 	postPost: [
 		check('title', 'Title must not be empty')
@@ -35,7 +37,6 @@ const postController = {
 		(req: Request, res: Response, next: NextFunction) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				console.log(req.body);
 				res.json({
 					title: req.body.title,
 					description: req.body.description,
@@ -61,13 +62,15 @@ const postController = {
 		},
 	],
 
-	getPost: (req: Request, res: Response, next: NextFunction) =>
+	getPost: (req: Request, res: Response, next: NextFunction) => {
+		console.log(req.params);
 		Post.findById(req.params.postid).exec((err, result) => {
 			if (err) {
 				return next(err);
 			}
 			res.json(result);
-		}),
+		});
+	},
 
 	putPost: [
 		check('title', 'Title must not be empty')
@@ -105,7 +108,6 @@ const postController = {
 				published: true,
 			});
 
-			console.log(post, req.body);
 
 			Post.findByIdAndUpdate(req.params.postid, post, {}, err => {
 				if (err) {
