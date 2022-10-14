@@ -6,6 +6,7 @@ interface IPost {
 	content: string;
 	date: Schema.Types.Date;
 	published: boolean;
+	readTime: string;
 }
 
 const PostSchema = new Schema<IPost>({
@@ -14,6 +15,7 @@ const PostSchema = new Schema<IPost>({
 	content: String,
 	date: { type: Schema.Types.Date, required: true, default: Date.now() },
 	published: { type: Boolean, required: true, default: true },
+	readTime: { type: String, required: true },
 });
 
 PostSchema.virtual('url').get(function () {

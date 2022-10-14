@@ -9,14 +9,12 @@ import { Post } from '../models/Post';
 
 const postController = {
 	getPosts: (req: Request, res: Response, next: NextFunction) =>
-		Post.find({ $set: { published: true } }, 'title description date').exec(
-			(err, result) => {
-				if (err) {
-					return next(err);
-				}
-				res.json(result);
+		Post.find({ $set: { published: true } }, "title description date readTime").exec((err, result) => {
+			if (err) {
+				return next(err);
 			}
-		),
+			res.json(result);
+		}),
 
 	postPost: [
 		check('title', 'Title must not be empty')
@@ -49,6 +47,7 @@ const postController = {
 				title: req.body.title,
 				description: req.body.description,
 				content: req.body.content,
+				readTime: Math.ceil(req.body.content.trim().split(/\s+/).length / 250) + ' min reading time',
 				date: Date.now(),
 			});
 
@@ -63,7 +62,6 @@ const postController = {
 	],
 
 	getPost: (req: Request, res: Response, next: NextFunction) => {
-		console.log(req.params);
 		Post.findById(req.params.postid).exec((err, result) => {
 			if (err) {
 				return next(err);
@@ -107,7 +105,6 @@ const postController = {
 				date: req.body.date,
 				published: true,
 			});
-
 
 			Post.findByIdAndUpdate(req.params.postid, post, {}, err => {
 				if (err) {
