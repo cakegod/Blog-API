@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 interface IPost {
   title: string;
   description: string;

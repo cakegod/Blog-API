@@ -10,7 +10,7 @@ import { IPost } from '@/types';
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(new URL('/blog', process.env.URL));
   const posts: IPost[] = await res.json();
-  const paths = posts.map((post) => ({ params: { slug: post.slug } }));
+  const paths = posts.map((post) => ({ params: { postid: post.slug } }));
   return {
     paths,
     fallback: 'blocking',
@@ -20,8 +20,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
-  const { slug } = context.params!;
-  const res = await fetch(`http://localhost:3000/blog/${slug}`);
+  const { postid } = context.params!;
+  const res = await fetch(`http://localhost:3000/blog/${postid}`);
   try {
     const post: IPost = await res.json();
     return { props: { post } };
@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async (
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12'>
-      {'aa' && (
+      {
         <>
           <h2 className='m-0 text-violet-700 dark:text-violet-400'>
             {post.title}
@@ -49,7 +49,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
           <ReactMarkdown>{`${post.content}
 `}</ReactMarkdown>
         </>
-      )}
+      }
     </article>
   );
 }
