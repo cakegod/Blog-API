@@ -1,4 +1,3 @@
-import { IPost } from '@/types';
 import {
   GetStaticPaths,
   GetStaticProps,
@@ -6,11 +5,12 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import ReactMarkdown from 'react-markdown';
+import { IPost } from '@/types';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(new URL('/blog', process.env.URL));
   const posts: IPost[] = await res.json();
-  const paths = posts.map((post) => ({ params: { postid: post._id } }));
+  const paths = posts.map((post) => ({ params: { slug: post.slug } }));
   return {
     paths,
     fallback: 'blocking',
@@ -20,8 +20,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
-  const { postid } = context.params!;
-  const res = await fetch(`http://localhost:3000/blog/${postid}`);
+  const { slug } = context.params!;
+  const res = await fetch(`http://localhost:3000/blog/${slug}`);
   try {
     const post: IPost = await res.json();
     return { props: { post } };

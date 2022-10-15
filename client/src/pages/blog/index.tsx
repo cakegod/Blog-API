@@ -1,7 +1,7 @@
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import AboutMe from '@/components/AboutMe';
 import Posts from '@/components/Posts';
 import { IPost } from '@/types';
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 export const getStaticProps: GetStaticProps = async () => {
   const res = await fetch(new URL('/blog', process.env.URL));

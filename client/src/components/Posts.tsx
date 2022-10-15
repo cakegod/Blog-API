@@ -1,5 +1,5 @@
-import { IPost } from '@/types';
 import Link from 'next/link';
+import { IPost } from '@/types';
 
 interface Props {
   posts: IPost[];
@@ -12,9 +12,8 @@ function Posts({ posts }: Props) {
     </h2>
   ) : (
     <>
-      {posts.map((post) => {
-        return (
-          <Link key={post._id} href={`/blog/${post._id}`}>
+      {posts.map((post) => (
+          <Link key={post._id} href={`/blog/${post.slug}`}>
             <section>
               <h2 className='text-xl md:text-2xl text-violet-700 dark:text-violet-400 font-semibold hover:text-pink-600 dark:hover:text-pink-400 contrast-[.85] transition-all duration-500 cursor-pointer'>
                 {post.title}
@@ -32,8 +31,7 @@ function Posts({ posts }: Props) {
               </h3>
             </section>
           </Link>
-        );
-      })}
+        ))}
     </>
   );
 }

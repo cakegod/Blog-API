@@ -1,8 +1,8 @@
 import './styles/global.css';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
-import Header from '@/components/Header';
 import { ThemeProvider } from 'next-themes';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {

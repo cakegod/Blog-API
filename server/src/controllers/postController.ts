@@ -9,12 +9,17 @@ import { Post } from '../models/Post';
 
 const postController = {
 	getPosts: (req: Request, res: Response, next: NextFunction) =>
-		Post.find({ $set: { published: true } }, "title description date readTime").exec((err, result) => {
-			if (err) {
-				return next(err);
-			}
-			res.json(result);
-		}),
+		Post.find(
+			{ $set: { published: true }, slug: { $exists: true } },
+			'title description date readTime slug'
+		)
+			.sort({ date: -1 })
+			.exec((err, result) => {
+				if (err) {
+					return next(err);
+				}
+				res.json(result);
+			}),
 
 	postPost: [
 		check('title', 'Title must not be empty')
@@ -47,8 +52,15 @@ const postController = {
 				title: req.body.title,
 				description: req.body.description,
 				content: req.body.content,
-				readTime: Math.ceil(req.body.content.trim().split(/\s+/).length / 250) + ' min read',
+				readTime:
+					Math.ceil(
+						req.body.content.trim().split(/\s+/).length / 250
+					) + ' min read',
 				date: Date.now(),
+				slug: req.body.title
+					.toLowerCase()
+					.replace(/ /g, '-')
+					.replace(/[^\w-]+/g, ''),
 			});
 
 			post.save(err => {
@@ -62,7 +74,7 @@ const postController = {
 	],
 
 	getPost: (req: Request, res: Response, next: NextFunction) => {
-		Post.findById(req.params.postid).exec((err, result) => {
+		Post.findOne({slug: req.params.slug}).exec((err, result) => {
 			if (err) {
 				return next(err);
 			}

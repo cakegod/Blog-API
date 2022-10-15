@@ -5,6 +5,7 @@ interface IPost {
   _id: string;
   readTime: string;
   content?: string;
+  slug: string;
 }
 
 export type { IPost };
