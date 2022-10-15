@@ -7,4 +7,4 @@ interface IPost {
   content?: string;
 }
 
-export { IPost };
+export type { IPost };
