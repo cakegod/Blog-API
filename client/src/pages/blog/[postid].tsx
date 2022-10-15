@@ -1,51 +1,50 @@
 import { IPost } from '@/types';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from 'next';
 import ReactMarkdown from 'react-markdown';
 
-// export const getStaticProps =  async (context) => {
-//   // Fetch data from external API
-//   const { id } = context.query;
-//   const res = await fetch(`http://localhost:3000/blog/${id}`);
-//   const data = await res.json();
+export const getStaticPaths: GetStaticPaths = async () => {
+  const res = await fetch(new URL('/blog', process.env.URL));
+  const posts: IPost[] = await res.json();
+  const paths = posts.map((post) => ({ params: { postid: post._id } }));
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+};
 
-//   // Pass data to the page via props
-//   return { props: { data } };
-// };
+export const getStaticProps: GetStaticProps = async (
+  context: GetStaticPropsContext
+) => {
+  const { postid } = context.params!;
+  const res = await fetch(`http://localhost:3000/blog/${postid}`);
+  try {
+    const post: IPost = await res.json();
+    return { props: { post } };
+  } catch {
+    return { notFound: true };
+  }
+};
 
-function Post() {
-  const [post, setPost] = useState<IPost>();
-  const router = useRouter();
-
-  const { postid } = router.query;
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/blog/${postid}`);
-        const data = await res.json();
-        console.log(data);
-        setPost(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchPosts();
-  }, []);
-
+function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors'>
-      {post && (
+    <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12'>
+      {'aa' && (
         <>
-          <h2 className='m-0 text-violet-700 dark:text-violet-400'>{post.title}</h2>
+          <h2 className='m-0 text-violet-700 dark:text-violet-400'>
+            {post.title}
+          </h2>
           <p className='font-medium'>
             {new Intl.DateTimeFormat('en-GB', {
               year: 'numeric',
               month: 'long',
               day: '2-digit',
             }).format(Date.parse(post.date))}{' '}
-            - {Math.ceil(post.content.trim().split(/\s+/).length / 250)} min reading
-            time
+            - {post.readTime}
           </p>
           <ReactMarkdown>{`${post.content}
 `}</ReactMarkdown>

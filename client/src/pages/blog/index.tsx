@@ -1,31 +1,25 @@
 import AboutMe from '@/components/AboutMe';
-import Header from '@/components/Header';
 import Posts from '@/components/Posts';
 import { IPost } from '@/types';
-import { useEffect, useState } from 'react';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 
-export default function HomePage() {
-  const [postsData, setPostData] = useState<IPost[]>();
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch(new URL('/blog', process.env.URL));
+  const posts: IPost[] = await res.json();
+  console.log(posts);
+  return {
+    props: { posts },
+  };
+};
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/blog`);
-        const data = await res.json();
-        console.log(data);
-        setPostData(data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchPosts();
-  }, []);
-
+export default function HomePage({
+  posts,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <AboutMe></AboutMe>
-      <main className='flex flex-col gap-10 grow'>
-        <Posts postsData={postsData} />
+      <AboutMe />
+      <main className='flex flex-col gap-10 grow pb-12'>
+        <Posts posts={posts} />
       </main>
     </>
   );

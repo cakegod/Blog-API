@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
 import ThemeToggler from './ThemeToggler';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 function Header() {
   return (

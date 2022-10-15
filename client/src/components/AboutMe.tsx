@@ -1,5 +1,3 @@
-import React from 'react';
-
 function AboutMe() {
   return (
     <p className='dark:text-zinc-100 md:text-xl text-lg py-12'>
