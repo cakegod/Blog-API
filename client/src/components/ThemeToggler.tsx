@@ -11,7 +11,7 @@ function ThemeToggler() {
   if (!mounted) {
     return null;
   }
-  console.log(theme);
+
   return (
     <div>
       <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
