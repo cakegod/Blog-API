@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps = async (
 
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12'>
+    <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12 '>
       {
         <>
           <h2 className='m-0 text-violet-700 dark:text-violet-400'>
@@ -46,8 +46,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
             }).format(Date.parse(post.date))}{' '}
             - {post.readTime}
           </p>
-          <ReactMarkdown>{`${post.content}
-`}</ReactMarkdown>
+          <ReactMarkdown>{`${post.content}`}</ReactMarkdown>
         </>
       }
     </article>

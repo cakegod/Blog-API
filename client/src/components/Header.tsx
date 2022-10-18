@@ -3,10 +3,10 @@ import ThemeToggler from './ThemeToggler';
 
 function Header() {
   return (
-    <header className='pb-12 border-b border-zinc-300 dark:border-zinc-700 '>
+    <header className='pb-12'>
       <div className='flex justify-between items-center pb-10'>
         <Link href='/'>
-          <h1 className='cursor-pointer text-4xl md:text-5xl font-bold dark:text-zinc-100 text-zinc-900 '>
+          <h1 className='cursor-pointer text-4xl md:text-5xl font-bold dark:text-pink-400 text-pink-800 '>
             Cake's Blog
           </h1>
         </Link>
@@ -15,7 +15,7 @@ function Header() {
         </button> */}
         <ThemeToggler />
       </div>
-      <nav className='font-medium text-lg md:text-xl flex justify-between dark:text-zinc-300 hover:[&>*]:text-red-600 dark:hover:[&>*]:text-red-400 dark:[&>*]:transition-all [&>*]:transition-all'>
+      <nav className='font-medium text-lg md:text-xl flex justify-between dark:text-zinc-300  hover:[&>*]:text-red-600 dark:hover:[&>*]:text-red-400 dark:[&>*]:transition-all [&>*]:transition-all'>
         <Link href='/'>Blog</Link>
         <Link href='https://github.com/cakegod'>Github</Link>
         <Link href='/portfolio'>Portfolio</Link>
