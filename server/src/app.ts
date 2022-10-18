@@ -1,24 +1,18 @@
 import express, { Request, Response, NextFunction } from 'express';
-import path from 'path';
 import createHttpError from 'http-errors';
 import logger from 'morgan';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import { config } from 'dotenv';
-import { Strategy as LocalStrategy } from 'passport-local';
-import session from 'express-session';
-import passport from 'passport';
-import bcrypt from 'bcryptjs';
-import blogRouter from './routes/blog';
-import indexRouter from './routes/index'
-import CHttpException from './types';
 import cors from 'cors';
-import { User } from './models/User';
+import blogRouter from './routes/blog';
+import indexRouter from './routes/index';
+import CHttpException from './types';
 
-// Init dotenv
+/* --- INIT DOTENV --- */
 config();
 
-// Database connection
+/* --- DATABASE CONNECTION --- */
 const mongoDB = process.env.MONGO_URI!;
 mongoose.connect(mongoDB, {
 	useNewUrlParser: true,
@@ -29,94 +23,44 @@ const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// init express
+/* --- INIT EXPRESS --- */
 const app = express();
 
-// CORS
+/* --- CORS --- */
 app.use(cors());
 
-// Passport
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.urlencoded({ extended: false }));
-
-// sets basic express settings
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// logger
+/* --- LOGGER --- */
 if (app.get('env') === 'development') {
 	app.use(logger('dev'));
 }
 
-// security
+/* --- SECURITY --- */
 if (app.get('env') === 'production') {
 	app.use(helmet());
 }
 
+/* --- SAVE CURRENT USER IN LOCAL --- */
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
 	next();
 });
 
-// view engine and statics primer
-app.use(express.static(path.join(__dirname, '../', 'public')));
-app.set('views', path.join(__dirname, '../', 'views'));
-app.set('view engine', 'pug');
-
-
-app.use('/', indexRouter)
-// Blog route
+/* --- ROUTES --- */
+app.use('/', indexRouter);
 app.use('/blog', blogRouter);
 
-// catch 404 and fwd
+/* --- CATCH 404 --- */
 app.use((req: Request, res: Response, next: NextFunction) => {
 	next(createHttpError(404));
 });
 
-// error handler
+/* --- ERROR HANDLE --- */
 app.use((err: CHttpException, req: Request, res: Response) => {
 	if (req.app.get('env') === 'development') {
 		res.locals.error = err;
 	} else res.locals.error = {};
 	res.locals.message = res.locals.error;
 
-	// render error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.send('error');
 });
-
-passport.use(
-	new LocalStrategy((username, password, done) => {
-		User.findOne({ username }).exec((err, user) => {
-			if (err) {
-				return done(err);
-			}
-			if (!user) {
-				return done(null, false, { message: 'Incorrect username' });
-			}
-			bcrypt.compare(password, user.password, (_err, res) => {
-				if (_err) {
-					return done(_err);
-				}
-				if (res) {
-					return done(null, user);
-				}
-				return done(null, false, { message: 'Incorrect password' });
-			});
-		});
-	})
-);
-
-passport.serializeUser((user, done) => {
-	done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-	User.findById(id).exec((err, user) => {
-		done(err, user);
-	});
-});
-
-export default app;
