@@ -1,9 +1,5 @@
-import async from 'async';
 import { Request, Response, NextFunction } from 'express';
-import { body, check, validationResult } from 'express-validator';
-import bcrypt from 'bcryptjs';
-import passport from 'passport';
-
+import { check, validationResult } from 'express-validator';
 import { CallbackError } from 'mongoose';
 import { Post } from '../models/Post';
 
@@ -52,10 +48,9 @@ const postController = {
 				title: req.body.title,
 				description: req.body.description,
 				content: req.body.content,
-				readTime:
-					`${Math.ceil(
-						req.body.content.trim().split(/\s+/).length / 250
-					)  } min read`,
+				readTime: `${Math.ceil(
+					req.body.content.trim().split(/\s+/).length / 250
+				)} min read`,
 				date: Date.now(),
 				slug: req.body.title
 					.toLowerCase()
