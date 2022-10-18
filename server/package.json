@@ -6,8 +6,8 @@
 	"scripts": {
 		"start": "node ./dist/index.js",
 		"build": "rm -rf ./dist/* && tsc",
-		"start:dev": "nodemon dist/index.js --watch",
-		"build:dev": "tsc --watch --preserveWatchOutput",
+		"start:dev": "nodemon dist/index.js",
+		"build:dev": "tsc --watch",
 		"serve": "concurrently \"npm run build:dev\" \"tsc-alias -w\" \"npm run start:dev\""
 	},
 	"repository": {
