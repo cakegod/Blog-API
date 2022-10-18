@@ -53,9 +53,9 @@ const postController = {
 				description: req.body.description,
 				content: req.body.content,
 				readTime:
-					Math.ceil(
+					`${Math.ceil(
 						req.body.content.trim().split(/\s+/).length / 250
-					) + ' min read',
+					)  } min read`,
 				date: Date.now(),
 				slug: req.body.title
 					.toLowerCase()
@@ -74,7 +74,7 @@ const postController = {
 	],
 
 	getPost: (req: Request, res: Response, next: NextFunction) => {
-		Post.findOne({slug: req.params.slug}).exec((err, result) => {
+		Post.findOne({ slug: req.params.slug }).exec((err, result) => {
 			if (err) {
 				return next(err);
 			}

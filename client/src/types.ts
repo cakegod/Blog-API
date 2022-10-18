@@ -7,6 +7,7 @@ interface IPost {
   readTime: string;
   content?: string;
   slug: string;
+  published: boolean;
 }
 
 export type { IPost };
