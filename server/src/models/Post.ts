@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import { IComment, CommentSchema } from './Comment';
 
 interface IPost {
 	title: string;
@@ -9,7 +8,7 @@ interface IPost {
 	published: boolean;
 	readTime: string;
 	slug: string;
-	comments: IComment[];
+
 }
 
 const PostSchema = new Schema<IPost>({
@@ -20,7 +19,6 @@ const PostSchema = new Schema<IPost>({
 	published: { type: Boolean, required: true, default: true },
 	readTime: { type: String, required: true },
 	slug: { type: String, required: true },
-	comments: { type: [CommentSchema] },
 });
 
 const Post = model<IPost>('Post', PostSchema);

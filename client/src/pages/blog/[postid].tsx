@@ -5,7 +5,9 @@ import {
   InferGetStaticPropsType,
 } from 'next';
 import ReactMarkdown from 'react-markdown';
+import Giscus from '@giscus/react';
 import { IPost } from '@/types';
+import { useTheme } from 'next-themes';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(new URL('/blog', process.env.URL));
@@ -31,6 +33,7 @@ export const getStaticProps: GetStaticProps = async (
 };
 
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { theme } = useTheme();
   return (
     <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12 '>
       {
@@ -47,6 +50,21 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
             - {post.readTime}
           </p>
           <ReactMarkdown>{`${post.content}`}</ReactMarkdown>
+          <Giscus
+            repo='cakegod/Blog-API'
+            repoId='R_kgDOINOBJQ'
+            category='General'
+            categoryId='DIC_kwDOINOBJc4CSHm3'
+            mapping='specific'
+            term={post.title}
+            strict='0'
+            reactions-enabled='1'
+            emitMetadata='0'
+            inputPosition='top'
+            theme={theme === 'dark' ? 'dark' : 'light'}
+            lang='en'
+            loading='lazy'
+          />
         </>
       }
     </article>
