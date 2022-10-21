@@ -5,29 +5,39 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import { config } from 'dotenv';
 import cors from 'cors';
+import session from 'express-session';
+import passport from 'passport';
+import userRouter from './routes/user';
 import blogRouter from './routes/blog';
 import indexRouter from './routes/index';
 import CHttpException from './types';
+import passportConfig from './passport';
 
 /* --- INIT DOTENV --- */
 config();
 
 /* --- DATABASE CONNECTION --- */
-const mongoDB = process.env.MONGO_URI!;
-mongoose.connect(mongoDB, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-} as mongoose.ConnectOptions);
+mongoose.connect(process.env.MONGO_URI!);
 
-const db = mongoose.connection;
+mongoose.connection.on('error', err =>
+	console.log(`MongoDB connection error: ${err}`)
+);
 
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+mongoose.connection.on('connected', () => {
+	console.log('Mongoose is connected');
+});
 
 /* --- INIT EXPRESS --- */
 const app = express();
 
+/* --- PARSERS --- */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 /* --- CORS --- */
 app.use(cors());
+
+app.use(session({ secret: 'cake', resave: false, saveUninitialized: false }));
 
 /* --- LOGGER --- */
 if (app.get('env') === 'development') {
@@ -45,9 +55,15 @@ app.use((req, res, next) => {
 	next();
 });
 
+/* --- INIT PASSPORT --- */
+passportConfig();
+app.use(passport.initialize());
+app.use(passport.session());
+
 /* --- ROUTES --- */
 app.use('/', indexRouter);
 app.use('/blog', blogRouter);
+app.use('/user', userRouter);
 
 /* --- CATCH 404 --- */
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -64,3 +80,5 @@ app.use((err: CHttpException, req: Request, res: Response) => {
 	res.status(err.status || 500);
 	res.send('error');
 });
+
+export default app;
