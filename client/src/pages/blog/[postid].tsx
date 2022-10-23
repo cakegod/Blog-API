@@ -37,8 +37,8 @@ export const getStaticProps: GetStaticProps = async (
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { theme } = useTheme();
   return (
-    <>
-      <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors py-12 border-t border-zinc-800'>
+    <div className='py-12'>
+      <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors'>
         {
           <>
             <div>
@@ -69,7 +69,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
         lang='en'
         loading='lazy'
       />
-    </>
+    </div>
   );
 }
 

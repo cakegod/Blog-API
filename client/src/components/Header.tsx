@@ -3,7 +3,7 @@ import ThemeToggler from './ThemeToggler';
 
 function Header() {
   return (
-    <header className='pb-12'>
+    <header className='pb-12 border-b dark:border-zinc-700 border-zinc-300'>
       <div className='flex justify-between items-center pb-10'>
         <Link href='/'>
           <h1 className='cursor-pointer text-4xl md:text-5xl font-bold dark:text-pink-400 text-pink-800'>
