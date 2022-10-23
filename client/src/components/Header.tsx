@@ -6,7 +6,7 @@ function Header() {
     <header className='pb-12'>
       <div className='flex justify-between items-center pb-10'>
         <Link href='/'>
-          <h1 className='cursor-pointer text-4xl md:text-5xl font-bold dark:text-pink-400 text-pink-800 '>
+          <h1 className='cursor-pointer text-4xl md:text-5xl font-bold dark:text-pink-400 text-pink-800'>
             Cake's Blog
           </h1>
         </Link>

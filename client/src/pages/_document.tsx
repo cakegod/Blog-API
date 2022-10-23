@@ -9,7 +9,7 @@ export default function Document() {
           rel='stylesheet'
         ></link>
       </Head>
-      <body className='min-h-screen w-full overflow-y-scroll bg-slate-100 dark:bg-zinc-900 pt-14 pb-6 px-6 flex justify-center'>
+      <body className='min-h-screen w-full overflow-y-scroll bg-slate-50 dark:bg-[#161b22] pt-14 pb-6 px-6 flex justify-center'>
         <div className='max-w-4xl w-full'>
           <Main />
           <NextScript />

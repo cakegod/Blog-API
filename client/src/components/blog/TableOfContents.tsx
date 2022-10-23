@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-function TableOfContent() {
+function TableOfContents() {
   const [headings, setHeadings] = useState<string[]>();
   useEffect(() => {
     const query = document.querySelectorAll('h3');
@@ -19,8 +19,8 @@ function TableOfContent() {
   return (
     <>
       {headings && (
-        <div className='px-4 py-1 left-0 top-0'>
-          <h4 className='uppercase'>Table of Content</h4>
+        <div className='px-4 py-1'>
+          <h4 className='uppercase'>Table of Contents</h4>
           <ul>
             {headings.map((heading) => (
               <li className='text-base'>
@@ -34,4 +34,4 @@ function TableOfContent() {
   );
 }
 
-export default TableOfContent;
+export default TableOfContents;
