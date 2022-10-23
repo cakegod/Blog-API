@@ -4,9 +4,9 @@
 	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"build": "npx tsc",
-    "start": "nodemon dist",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist\""
+		"build": "npx -p typescript tsc",
+		"start": "nodemon dist",
+		"dev": "concurrently \"npx -p typescript tsc --watch\" \"nodemon -q dist\""
 	},
 	"repository": {
 		"type": "git",
@@ -46,7 +46,6 @@
 			"prettier --write"
 		]
 	},
-
 	"engines": {
 		"node": ">=16.0.0"
 	},
