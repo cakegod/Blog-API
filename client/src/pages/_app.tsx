@@ -8,7 +8,10 @@ import Footer from '@/components/Footer';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <div className='min-h-screen flex flex-col'>
-      <ThemeProvider attribute='class'>
+      <ThemeProvider
+        attribute='class'
+        enableSystem={true}
+      >
         <Head>
           <title></title>
           <meta></meta>
