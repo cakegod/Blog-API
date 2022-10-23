@@ -14,7 +14,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "tsconfig.json",
-    "tsconfigRootDir": "client"
+    "tsconfigRootDir": ""
   },
   "plugins": ["@typescript-eslint", "import"],
   "rules": {
