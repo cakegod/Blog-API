@@ -17,11 +17,7 @@ SyntaxHighlighter.registerLanguage('json', json);
 
 interface Props {
   post: IPost;
-};
-
-const customStyle = {
-  margin: '0',
-};
+}
 
 function ArticleContent({ post }: Props) {
   return (
@@ -33,7 +29,6 @@ function ArticleContent({ post }: Props) {
             <SyntaxHighlighter
               children={String(children).replace(/\n$/, '')}
               style={dracula}
-              customStyle={customStyle}
               language={'jsx'}
               wrapLongLines={true}
               PreTag='div'
