@@ -8,7 +8,7 @@ function formatDate(date: string, readTime: string): string {
     month: 'long',
     day: '2-digit',
   }).format(Date.parse(date))} - ${readTime} ${computeCoffeeTime(
-    parseInt(readTime)
+    parseInt(readTime,  10)
   )}`;
 }
 

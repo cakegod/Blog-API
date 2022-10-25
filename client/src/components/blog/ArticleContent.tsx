@@ -2,7 +2,7 @@ import { IPost } from '@/types';
 import ReactMarkdown from 'react-markdown';
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
-import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx'
+import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
@@ -17,7 +17,7 @@ SyntaxHighlighter.registerLanguage('json', json);
 
 interface Props {
   post: IPost;
-}
+};
 
 const customStyle = {
   margin: '0',
