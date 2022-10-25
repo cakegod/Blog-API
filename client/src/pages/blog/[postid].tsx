@@ -4,12 +4,12 @@ import {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from 'next';
-import ReactMarkdown from 'react-markdown';
 import Giscus from '@giscus/react';
 import { useTheme } from 'next-themes';
 import { IPost } from '@/types';
 import TableOfContent from '@/components/blog/TableOfContents';
 import formatDate from '@/components/util/formatData';
+import ArticleContent from '@/components/blog/ArticleContent';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const res = await fetch(new URL('/blog', process.env.URL));
@@ -35,10 +35,10 @@ export const getStaticProps: GetStaticProps = async (
 };
 
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   return (
     <div className='py-12'>
-      <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors'>
+      <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors prose-pre:p-0 prose-pre:contrast-125'>
         {
           <>
             <div>
@@ -50,7 +50,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
               </p>
             </div>
             <TableOfContent />
-            <ReactMarkdown>{`${post.content}`}</ReactMarkdown>
+            <ArticleContent post={post} />
           </>
         }
       </article>
@@ -65,7 +65,7 @@ function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
         reactions-enabled='1'
         emitMetadata='0'
         inputPosition='top'
-        theme={theme === 'dark' ? 'dark' : 'light'}
+        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
         lang='en'
         loading='lazy'
       />

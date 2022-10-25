@@ -5,7 +5,7 @@ interface IPost {
   date: string;
   _id: string;
   readTime: string;
-  content?: string;
+  content: string;
   slug: string;
   published: boolean;
 }

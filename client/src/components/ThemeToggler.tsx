@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 function ThemeToggler() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  console.log(useTheme());
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -16,7 +15,10 @@ function ThemeToggler() {
 
   return (
     <div>
-      <button onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}>
+      <button
+        onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}
+        aria-label='theme toggler'
+      >
         {resolvedTheme === 'light' ? (
           <SunIcon className='w-8 text-amber-400' />
         ) : (

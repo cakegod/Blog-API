@@ -7,14 +7,14 @@ import Footer from '@/components/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className='min-h-screen flex flex-col'>
-      <ThemeProvider
-        attribute='class'
-        enableSystem={true}
-      >
+    <div className='flex min-h-screen flex-col'>
+      <ThemeProvider attribute='class' enableSystem={true}>
         <Head>
-          <title></title>
-          <meta></meta>
+          <title>Cake's Blog</title>
+          <meta
+            name='viewport'
+            content='initial-scale=1.0, width=device-width'
+          ></meta>
         </Head>
         <Header />
         <Component {...pageProps} />

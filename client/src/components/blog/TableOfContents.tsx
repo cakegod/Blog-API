@@ -20,10 +20,10 @@ function TableOfContents() {
     <>
       {headings && (
         <div className='px-4 py-1'>
-          <h4 className='uppercase'>Table of Contents</h4>
+          <h3 className='uppercase'>Table of Contents</h3>
           <ul>
             {headings.map((heading) => (
-              <li className='text-base'>
+              <li className='text-base' key={heading}>
                 <a href={`#${heading}`}>{heading}</a>
               </li>
             ))}
