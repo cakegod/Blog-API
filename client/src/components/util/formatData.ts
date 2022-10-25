@@ -1,3 +1,7 @@
+function computeCoffeeTime(readTime: number) {
+  return '☕'.repeat(Math.round(readTime / 6));
+}
+
 function formatDate(date: string, readTime: string): string {
   return `${new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
@@ -6,10 +10,6 @@ function formatDate(date: string, readTime: string): string {
   }).format(Date.parse(date))} - ${readTime} ${computeCoffeeTime(
     parseInt(readTime)
   )}`;
-}
-
-function computeCoffeeTime(readTime: number) {
-  return '☕'.repeat(Math.round(readTime / 6));
 }
 
 export default formatDate;
