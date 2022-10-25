@@ -36,10 +36,9 @@ export const getStaticProps: GetStaticProps = async (
 
 function Post({ post }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { resolvedTheme } = useTheme();
-  console.log(post.content)
   return (
     <div className='py-12'>
-      <article className='prose prose-lg max-w-[100%] prose-violet dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 hover:prose-a:text-pink-500 dark:hover:prose-a:text-pink-400 hover:prose-a:transition-colors prose-pre:p-0 prose-pre:contrast-125'>
+      <article className='prose prose-lg prose-violet max-w-[100%] hover:prose-a:text-pink-500 hover:prose-a:transition-colors prose-pre:p-0 prose-pre:contrast-125 dark:prose-invert dark:contrast-[.85] dark:prose-a:text-violet-400 dark:hover:prose-a:text-pink-400 md:prose-pre:text-xl'>
         {
           <>
             <div>

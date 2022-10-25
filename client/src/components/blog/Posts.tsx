@@ -19,7 +19,7 @@ function Posts({ posts }: Props) {
             <h3 className='cursor-pointer text-2xl font-semibold text-violet-700 contrast-[.85] transition-all duration-500 visited:text-red-500 hover:text-pink-600 dark:text-violet-400 dark:hover:text-pink-400'>
               {post.title}
             </h3>
-            <p className='pb-1 text-lg text-[#0d1117] dark:text-zinc-300'>
+            <p className='pb-2 text-[#0d1117] dark:text-zinc-300'>
               {formatDate(post.date, post.readTime)}
             </p>
             <h4 className='text-xl text-[#0d1117] dark:text-zinc-100'>
