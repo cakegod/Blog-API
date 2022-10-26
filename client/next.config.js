@@ -7,6 +7,9 @@ module.exports = {
         destination: '/blog',
         permanent: true,
       },
-    ]
+    ];
   },
-}
+  experimental: {
+    appDir: true,
+  },
+};

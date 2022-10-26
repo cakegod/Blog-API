@@ -1,0 +1,30 @@
+import '../styles/global.css';
+import { Poppins } from '@next/font/google';
+
+const poppins = Poppins({
+  weight: '400',
+  subsets: ['latin'],
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang='en' className={poppins.className}>
+      <head>
+        <title>Cake's blog</title>
+        <meta
+          name='viewport'
+          content='initial-scale=1.0, width=device-width'
+        ></meta>
+      </head>
+      <body className='flex min-h-screen w-full justify-center overflow-y-scroll bg-slate-50 p-6 pt-14 dark:bg-[#161b22]'>
+        <div className='w-full max-w-4xl'>
+          <div className='flex min-h-screen flex-col'>{children}</div>
+        </div>
+      </body>
+    </html>
+  );
+}

@@ -2,11 +2,16 @@ import Link from 'next/link';
 import { IPost } from '@/types';
 import formatDate from '../util/formatData';
 
-interface Props {
-  posts: IPost[];
+async function fetchPosts() {
+  const res = await fetch(new URL('/blog', process.env.URL));
+  const data = await res.json();
+
+  return data;
 }
 
-function Posts({ posts }: Props) {
+export default async function Posts() {
+  const posts: IPost[] = await fetchPosts();
+
   return posts === undefined ? (
     <h3 className='text-2xl dark:text-zinc-100'>
       There are currently no posts available
@@ -31,5 +36,3 @@ function Posts({ posts }: Props) {
     </>
   );
 }
-
-export default Posts;
