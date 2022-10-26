@@ -10,12 +10,10 @@ export default function BlogLayout({
   children: React.ReactNode;
 }) {
   return (
-
-        <ThemeProvider attribute='class' enableSystem={true}>
-          <Header />
-          {children}
-          <Footer />
-        </ThemeProvider>
-     
+    <ThemeProvider attribute='class' enableSystem={true}>
+      <Header />
+      {children}
+      <Footer />
+    </ThemeProvider>
   );
 }

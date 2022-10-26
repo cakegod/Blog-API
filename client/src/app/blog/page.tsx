@@ -1,7 +1,6 @@
 import AboutMe from '@/components/blog/AboutMe';
 import Posts from '@/components/blog/Posts';
 
-
 export default function HomePage() {
   return (
     <>
