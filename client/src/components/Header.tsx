@@ -7,7 +7,7 @@ function Header() {
       <div className='flex items-center justify-between pb-10'>
         <Link href='/'>
           <h1 className='cursor-pointer text-4xl font-bold text-pink-800 dark:text-pink-400 md:text-5xl'>
-            Cake's Blog
+            Cake&apos;s Blog
           </h1>
         </Link>
         {/* <button className='bg-zinc-600 rounded-full p-1'>

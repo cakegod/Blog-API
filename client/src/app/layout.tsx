@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang='en' className={poppins.className}>
       <head>
-        <title>Cake's blog</title>
+        <title>Cake&apos;s blog</title>
         <meta
           name='viewport'
           content='initial-scale=1.0, width=device-width'
