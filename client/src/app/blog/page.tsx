@@ -1,7 +1,16 @@
 import AboutMe from '@/components/blog/AboutMe';
 import Posts from '@/components/blog/Posts';
+import { IPost } from '@/types';
 
-export default function HomePage() {
+async function fetchPosts() {
+  const res = await fetch(new URL('/blog', process.env.URL));
+  const data = await res.json();
+
+  return data;
+}
+
+export default async function HomePage() {
+  const posts: IPost[] = await fetchPosts();
   return (
     <>
       <AboutMe />
@@ -9,7 +18,7 @@ export default function HomePage() {
         Latest posts
       </h2>
       <main className='flex grow flex-col gap-10 py-10'>
-        <Posts />
+        <Posts posts={posts} />
       </main>
     </>
   );

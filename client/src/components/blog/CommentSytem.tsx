@@ -1,9 +1,14 @@
 'use client';
 
+import { IPost } from '@/types';
 import Giscus from '@giscus/react';
 import { useTheme } from 'next-themes';
 
-function CommentSytem({ post }) {
+interface Props {
+  post: IPost;
+}
+
+function CommentSytem({ post }: Props) {
   const { resolvedTheme } = useTheme();
   return (
     <Giscus
