@@ -1,4 +1,4 @@
-import '../styles/global.css';
+import '@/styles/global.css';
 import { Poppins } from '@next/font/google';
 
 const poppins = Poppins({

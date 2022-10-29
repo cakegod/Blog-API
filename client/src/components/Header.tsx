@@ -5,10 +5,11 @@ function Header() {
   return (
     <header className='border-b border-zinc-300 pb-12 dark:border-zinc-700'>
       <div className='flex items-center justify-between pb-10'>
-        <Link href='/'>
-          <h1 className='cursor-pointer text-4xl font-bold text-pink-800 dark:text-pink-400 md:text-5xl'>
-            Cake&apos;s Blog
-          </h1>
+        <Link
+          href='/'
+          className='cursor-pointer text-4xl font-bold text-pink-800 dark:text-pink-400 md:text-5xl'
+        >
+          Cake&apos;s Blog
         </Link>
         {/* <button className='bg-zinc-600 rounded-full p-1'>
           <MagnifyingGlassIcon className='w-6 ' />

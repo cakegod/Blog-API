@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { IPost } from '@/types';
-import formatDate from '../util/formatData';
+import formatDate from '@/util/formatData';
 
 interface Props {
   posts: IPost[];

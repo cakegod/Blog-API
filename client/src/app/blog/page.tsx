@@ -1,5 +1,5 @@
 import AboutMe from '@/components/blog/AboutMe';
-import Posts from '@/components/blog/Posts';
+import Posts from '@blog/Posts';
 import { IPost } from '@/types';
 
 async function fetchPosts() {
