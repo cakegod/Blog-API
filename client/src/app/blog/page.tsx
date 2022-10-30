@@ -1,22 +1,16 @@
-import { GetStaticProps } from 'next';
 import AboutMe from '@/components/blog/AboutMe';
-import Posts from '@/components/blog/Posts';
+import Posts from '@blog/Posts';
 import { IPost } from '@/types';
 
-interface Props {
-  posts: IPost[];
+async function fetchPosts() {
+  const res = await fetch(new URL('/blog', process.env.URL));
+  const data = await res.json();
+
+  return data;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch(new URL('/blog', process.env.URL));
-  const posts: IPost[] = await res.json();
-  console.log(posts);
-  return {
-    props: { posts },
-  };
-};
-
-export default function HomePage({ posts }: Props) {
+export default async function HomePage() {
+  const posts: IPost[] = await fetchPosts();
   return (
     <>
       <AboutMe />

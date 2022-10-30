@@ -21,5 +21,6 @@
   "homepage": "https://github.com/cakegod/Express-NextJS-Template#readme",
   "dependencies": {
     "concurrently": "^7.4.0"
-  }
+  },
+  "packageManager": "yarn@3.2.4"
 }
