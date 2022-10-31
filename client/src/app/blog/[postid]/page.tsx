@@ -1,8 +1,8 @@
 import { IPost } from '@/types';
-import TableOfContent from '@blog/post/TableOfContents';
-import ArticleContent from '@blog/post/ArticleContent';
-import CommentSytem from '@blog/post/CommentSytem';
-import ArticleHeader from '@blog/post/ArticleHeader';
+import TableOfContent from './(components)/TableOfContents';
+import ArticleContent from './(components)/ArticleContent';
+import CommentSytem from './(components)/CommentSytem';
+import ArticleHeader from './(components)/ArticleHeader';
 
 type Params = { params: { postid: string } };
 
