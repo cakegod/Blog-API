@@ -13,8 +13,8 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ postid: post.slug }));
 }
 
-async function fetchPost(params: Params['params']) {
-  const url = `${process.env.URL}/blog/${params.postid}`;
+async function fetchPost(postid: string): Promise<IPost> {
+  const url = `${process.env.URL}/blog/${postid}`;
   const res = await fetch(url);
   const data = await res.json();
 
@@ -22,7 +22,7 @@ async function fetchPost(params: Params['params']) {
 }
 
 async function Post({ params }: Params) {
-  const post = await fetchPost(params);
+  const post = await fetchPost(params.postid);
 
   return (
     <>

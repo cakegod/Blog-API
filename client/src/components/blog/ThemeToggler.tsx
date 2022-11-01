@@ -2,10 +2,17 @@
 
 import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import { useTheme } from 'next-themes';
+import { UseThemeProps } from 'next-themes/dist/types';
 import { useEffect, useState } from 'react';
 
+// Limit theme types to specific strings values
+interface Themes extends Omit<UseThemeProps, 'resolvedTheme' | 'setTheme'> {
+  resolvedTheme: 'light' | 'dark';
+  setTheme: (theme: 'dark' | 'light') => void;
+}
+
 function ThemeToggler() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme() as Themes;
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
