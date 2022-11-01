@@ -8,7 +8,7 @@ interface Props {
   post: IPost;
 }
 
-function CommentSytem({ post }: Props) {
+function CommentSystem({ post }: Props) {
   const { resolvedTheme } = useTheme();
   return (
     <Giscus
@@ -29,4 +29,4 @@ function CommentSytem({ post }: Props) {
   );
 }
 
-export default CommentSytem;
+export default CommentSystem;

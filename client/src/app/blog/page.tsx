@@ -1,5 +1,5 @@
-import AboutMe from './(components)/AboutMe';
-import Posts from './(components)/Posts';
+import AboutMe from '@blog/AboutMe';
+import Posts from '@blog/Posts';
 
 export default async function HomePage() {
   return (

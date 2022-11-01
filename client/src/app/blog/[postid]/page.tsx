@@ -1,8 +1,8 @@
 import { IPost } from '@/types';
-import TableOfContent from './(components)/TableOfContents';
-import ArticleContent from './(components)/ArticleContent';
-import CommentSytem from './(components)/CommentSytem';
-import ArticleHeader from './(components)/ArticleHeader';
+import TableOfContent from '@blog/post/TableOfContents';
+import ArticleContent from '@blog/post/ArticleContent';
+import CommentSystem from '@blog/post/CommentSystem';
+import ArticleHeader from '@blog/post/ArticleHeader';
 
 type Params = { params: { postid: string } };
 
@@ -29,7 +29,7 @@ async function Post({ params }: Params) {
       <ArticleHeader post={post} />
       <TableOfContent />
       <ArticleContent post={post} />
-      <CommentSytem post={post} />
+      <CommentSystem post={post} />
     </>
   );
 }

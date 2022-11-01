@@ -1,8 +1,8 @@
 'use client';
 
 import { ThemeProvider } from 'next-themes';
-import Header from './(components)/Header';
-import Footer from './(components)/Footer';
+import Header from '@blog/Header';
+import Footer from '@blog/Footer';
 
 interface Props {
   children: React.ReactNode;
