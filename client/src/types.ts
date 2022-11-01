@@ -1,3 +1,5 @@
+import { StaticImageData } from 'next/image';
+
 /* eslint-disable import/prefer-default-export */
 interface IPost {
   title: string;
@@ -10,4 +12,10 @@ interface IPost {
   published: boolean;
 }
 
-export type { IPost };
+interface IProject {
+  image: StaticImageData;
+  name: string;
+  link: string;
+}
+
+export type { IPost, IProject };

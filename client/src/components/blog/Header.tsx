@@ -18,8 +18,8 @@ function Header() {
       </div>
       <nav className='flex justify-between text-lg font-medium dark:text-zinc-300 md:text-xl  [&>*]:transition-all hover:[&>*]:text-red-600 dark:[&>*]:transition-all dark:hover:[&>*]:text-red-400'>
         <Link href='/'>Blog</Link>
+        <Link href='/projects'>Projects</Link>
         <Link href='https://github.com/cakegod'>Github</Link>
-        <Link href='/portfolio'>Portfolio</Link>
         <Link href='/contact'>Contact</Link>
       </nav>
     </header>
