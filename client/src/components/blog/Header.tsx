@@ -1,7 +1,17 @@
 import Link from 'next/link';
 import ThemeToggler from './ThemeToggler';
+import { usePathname } from 'next/navigation';
 
 function Header() {
+  const pathname = usePathname();
+
+  function underlineNavLink(path: string) {
+    return pathname === `/${path}`
+      ? 'dark text-red-600 dark:text-red-400 underline decoration-1'
+      : '';
+  }
+
+  console.log(pathname);
   return (
     <header className='border-b border-zinc-300 pb-12 dark:border-zinc-700'>
       <div className='flex items-center justify-between pb-10'>
@@ -17,10 +27,18 @@ function Header() {
         <ThemeToggler />
       </div>
       <nav className='flex justify-between text-lg font-medium dark:text-zinc-300 md:text-xl  [&>*]:transition-all hover:[&>*]:text-red-600 dark:[&>*]:transition-all dark:hover:[&>*]:text-red-400'>
-        <Link href='/'>Blog</Link>
-        <Link href='/projects'>Projects</Link>
-        <Link href='https://github.com/cakegod'>Github</Link>
-        <Link href='/contact'>Contact</Link>
+        <Link href='/' className={underlineNavLink('blog')}>
+          Blog
+        </Link>
+        <Link href='/projects' className={underlineNavLink('projects')}>
+          Projects
+        </Link>
+        <Link href='https://github.com/cakegod' className={underlineNavLink('github')}>
+          Github
+        </Link>
+        <Link href='/contact' className={underlineNavLink('contact')}>
+          Contact
+        </Link>
       </nav>
     </header>
   );
