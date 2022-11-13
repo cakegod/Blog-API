@@ -6,18 +6,15 @@ function computeTimeInCoffees(readTime: number): string {
   return coffeeIcon.repeat(numberOfCoffees);
 }
 
-function formatData(date: string, readTime: string) {
-  const parsedDate = Date.parse(date);
-  const parsedReadTime = parseInt(readTime, 10);
+function composeDate(date: string, readTime: string) {
   const customDateFormat = new Intl.DateTimeFormat('en-GB', {
     year: 'numeric',
     month: 'long',
     day: '2-digit',
   });
-  const formattedDate = customDateFormat.format(parsedDate);
-  return `${formattedDate} - ${readTime} ${computeTimeInCoffees(
-    parsedReadTime
-  )}`;
+  const formattedDate = customDateFormat.format(Date.parse(date));
+  const coffeeReadTime = computeTimeInCoffees(parseInt(readTime, 10));
+  return `${formattedDate} - ${readTime} ${coffeeReadTime}`;
 }
 
-export default formatData;
+export default composeDate;

@@ -1,5 +1,5 @@
 import { IPost } from '@/types';
-import formatDate from '@/util/formatData';
+import composeDate from '@/util/composeDate';
 
 interface Props {
   post: IPost;
@@ -9,7 +9,7 @@ function ArticleHeader({ post }: Props) {
   return (
     <div>
       <h2 className='m-0 text-violet-700 dark:text-violet-400'>{post.title}</h2>
-      <p className='font-medium'>{formatDate(post.date, post.readTime)}</p>
+      <p className='font-medium'>{composeDate(post.date, post.readTime)}</p>
     </div>
   );
 }

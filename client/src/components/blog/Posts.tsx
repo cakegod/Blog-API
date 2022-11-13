@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { IPost } from '@/types';
-import formatDate from '@/util/formatData';
+import composeDate from '@/util/composeDate';
 
 async function fetchPosts(): Promise<IPost[]> {
   const res = await fetch(new URL('/blog', process.env.URL));
@@ -28,7 +28,7 @@ const Posts = asyncComponent(async () => {
               {post.title}
             </h3>
             <p className='pb-2 text-[#0d1117] dark:text-zinc-300'>
-              {formatDate(post.date, post.readTime)}
+              {composeDate(post.date, post.readTime)}
             </p>
             <h4 className='text-[#0d1117] dark:text-zinc-100 md:text-lg'>
               {post.description}
