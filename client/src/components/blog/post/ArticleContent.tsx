@@ -9,7 +9,7 @@ import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import rehypeRaw from 'rehype-raw';
-import { IPost } from '@/types';
+import { PostProps } from '@/types';
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('jsx', jsx);
@@ -18,7 +18,7 @@ SyntaxHighlighter.registerLanguage('markdown', markdown);
 SyntaxHighlighter.registerLanguage('json', json);
 
 interface Props {
-  post: IPost;
+  post: PostProps;
 }
 
 function ArticleContent({ post }: Props) {

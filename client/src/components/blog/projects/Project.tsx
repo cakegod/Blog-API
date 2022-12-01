@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import { IProject } from '@/types';
+import { ProjectProps } from '@/types';
 import Link from 'next/link';
 
 interface Props {
-  project: IProject;
+  project: ProjectProps;
 }
 
 function Project({ project }: Props) {

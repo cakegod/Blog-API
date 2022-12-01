@@ -1,7 +1,7 @@
 import { StaticImageData } from 'next/image';
 
 /* eslint-disable import/prefer-default-export */
-interface IPost {
+interface PostProps {
   title: string;
   description: string;
   date: string;
@@ -12,10 +12,10 @@ interface IPost {
   published: boolean;
 }
 
-interface IProject {
+interface ProjectProps {
   image: StaticImageData;
   name: string;
   link: string;
 }
 
-export type { IPost, IProject };
+export type { PostProps, ProjectProps };

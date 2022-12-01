@@ -1,10 +1,10 @@
 import Project from '@blog/projects/Project';
-import { IProject } from '@/types';
+import { ProjectProps } from '@/types';
 import cucucakes from '~/cucucakes.png';
 import memoryGame from '~/memory-game.png';
 
 function page() {
-  const projects: IProject[] = [
+  const projects: ProjectProps[] = [
     {
       image: cucucakes,
       name: 'Shopping App',

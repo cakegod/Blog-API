@@ -1,8 +1,8 @@
-import { IPost } from '@/types';
+import { PostProps } from '@/types';
 import CustomDate from '@/util/CustomDate';
 
 interface Props {
-  post: IPost;
+  post: PostProps;
 }
 
 function ArticleHeader({ post }: Props) {

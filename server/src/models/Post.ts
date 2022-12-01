@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface IPost {
+interface PostProps {
 	title: string;
 	description: string;
 	content: string;
@@ -8,10 +8,9 @@ interface IPost {
 	published: boolean;
 	readTime: string;
 	slug: string;
-
 }
 
-const PostSchema = new Schema<IPost>({
+const PostSchema = new Schema<PostProps>({
 	title: { type: String, unique: true, required: true },
 	description: { type: String, required: true },
 	content: { type: String, required: true },
@@ -21,6 +20,6 @@ const PostSchema = new Schema<IPost>({
 	slug: { type: String, required: true },
 });
 
-const Post = model<IPost>('Post', PostSchema);
+const Post = model<PostProps>('Post', PostSchema);
 
-export { Post, IPost };
+export { Post, PostProps };

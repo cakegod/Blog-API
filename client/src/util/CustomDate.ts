@@ -1,4 +1,4 @@
-class CustomDate {
+export default class CustomDate {
   static TIME_PER_COFFEE = 6;
   static COFFEE_ICON = '☕';
   static DATE_FORMAT = new Intl.DateTimeFormat('en-GB', {
@@ -21,5 +21,3 @@ class CustomDate {
     return this.COFFEE_ICON.repeat(Math.round(readTime / this.TIME_PER_COFFEE));
   }
 }
-
-export default CustomDate;

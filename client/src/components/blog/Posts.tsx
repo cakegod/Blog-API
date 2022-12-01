@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { IPost } from '@/types';
+import { PostProps } from '@/types';
 import CustomDate from '@/util/CustomDate';
 
-async function fetchPosts(): Promise<IPost[]> {
+async function fetchPosts(): Promise<PostProps[]> {
   const res = await fetch(new URL('/blog', process.env.URL));
   const data = await res.json();
 

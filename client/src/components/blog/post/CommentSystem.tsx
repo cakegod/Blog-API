@@ -1,11 +1,11 @@
 'use client';
 
-import { IPost } from '@/types';
+import { PostProps } from '@/types';
 import Giscus from '@giscus/react';
 import { useTheme } from 'next-themes';
 
 interface Props {
-  post: IPost;
+  post: PostProps;
 }
 
 function CommentSystem({ post }: Props) {

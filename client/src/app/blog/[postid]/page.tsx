@@ -1,4 +1,4 @@
-import { IPost } from '@/types';
+import { PostProps } from '@/types';
 import TableOfContent from '@blog/post/TableOfContents';
 import ArticleContent from '@blog/post/ArticleContent';
 import CommentSystem from '@blog/post/CommentSystem';
@@ -9,11 +9,11 @@ type Params = { params: { postid: string } };
 export async function generateStaticParams() {
   const url = `${process.env.URL}/blog`;
   const res = await fetch(url);
-  const posts: IPost[] = await res.json();
+  const posts: PostProps[] = await res.json();
   return posts.map((post) => ({ postid: post.slug }));
 }
 
-async function fetchPost(postid: string): Promise<IPost> {
+async function fetchPost(postid: string): Promise<PostProps> {
   const url = `${process.env.URL}/blog/${postid}`;
   const res = await fetch(url);
   const data = await res.json();
