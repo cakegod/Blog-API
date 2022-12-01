@@ -9,6 +9,7 @@ async function fetchPosts(): Promise<PostProps[]> {
   return data;
 }
 
+// Hacky fix for server components
 function asyncComponent<T, R>(fn: (arg: T) => Promise<R>): (arg: T) => R {
   return fn as (arg: T) => R;
 }
