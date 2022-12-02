@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { PostProps } from '@/types';
-import CustomDate from '@/util/CustomDate';
+import { composeDate } from '@/util/composeDate';
 
 async function fetchPosts(): Promise<PostProps[]> {
   const res = await fetch(new URL('/blog', process.env.URL));
@@ -29,7 +29,7 @@ const Posts = asyncComponent(async () => {
               {post.title}
             </h3>
             <p className='pb-2 text-[#0d1117] dark:text-zinc-300'>
-              {CustomDate.compose(post.date, post.readTime)}
+              {composeDate(post.date, post.readTime)}
             </p>
             <h4 className='text-[#0d1117] dark:text-zinc-100 md:text-lg'>
               {post.description}
