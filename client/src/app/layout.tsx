@@ -24,6 +24,7 @@ export default function RootLayout({
           name='viewport'
           content='initial-scale=1.0, width=device-width'
         ></meta>
+        <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
       </head>
       <body className='flex min-h-screen w-full justify-center overflow-y-scroll bg-slate-50 p-6 pt-14 dark:bg-[#161b22]'>
         <div className='w-full max-w-4xl'>
