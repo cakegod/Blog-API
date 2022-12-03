@@ -22,7 +22,7 @@ function Header() {
         </Link>
         <ThemeToggler />
       </div>
-      <nav className='flex justify-between text-lg font-medium dark:text-zinc-300 md:text-xl  [&>*]:transition-all hover:[&>*]:text-red-600 dark:[&>*]:transition-all dark:hover:[&>*]:text-red-400'>
+      <nav className='flex justify-between text-lg font-medium dark:text-zinc-300 md:text-xl  [&>*]:transition-colors hover:[&>*]:text-red-600 dark:[&>*]:transition-colors dark:hover:[&>*]:text-red-400'>
         <Link href='/' className={underlineNavLink('blog')}>
           Blog
         </Link>
