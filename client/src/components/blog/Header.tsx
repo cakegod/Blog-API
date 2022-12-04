@@ -2,14 +2,32 @@ import Link from 'next/link';
 import ThemeToggler from './ThemeToggler';
 import { usePathname } from 'next/navigation';
 
+const navigationLinks = [
+  {
+    path: '/blog',
+    label: 'Blog',
+  },
+  {
+    path: '/projects',
+    label: 'Projects',
+  },
+  {
+    path: 'https://github.com/cakegod',
+    label: 'Github',
+  },
+  {
+    path: '/contact',
+    label: 'Contact',
+  },
+];
+
 function Header() {
   const pathname = usePathname();
 
-  function underlineNavLink(path: string) {
-    return pathname === `/${path}`
+  const underlineNavLink = (path: string) =>
+    pathname === `/${path}`
       ? 'dark text-red-600 dark:text-red-400 underline decoration-1'
       : '';
-  }
 
   return (
     <header className='border-b border-zinc-300 pb-12 dark:border-zinc-700'>
@@ -23,21 +41,11 @@ function Header() {
         <ThemeToggler />
       </div>
       <nav className='flex justify-between text-lg font-medium dark:text-zinc-300 md:text-xl  [&>*]:transition-colors hover:[&>*]:text-red-600 dark:[&>*]:transition-colors dark:hover:[&>*]:text-red-400'>
-        <Link href='/' className={underlineNavLink('blog')}>
-          Blog
-        </Link>
-        <Link href='/projects' className={underlineNavLink('projects')}>
-          Projects
-        </Link>
-        <Link
-          href='https://github.com/cakegod'
-          className={underlineNavLink('github')}
-        >
-          Github
-        </Link>
-        <Link href='/contact' className={underlineNavLink('contact')}>
-          Contact
-        </Link>
+        {navigationLinks.map(({ path, label }) => (
+          <Link key={path} href={path} className={underlineNavLink(path)}>
+            {label}
+          </Link>
+        ))}
       </nav>
     </header>
   );

@@ -17,7 +17,6 @@ async function fetchPost(postid: string): Promise<PostProps> {
   const url = `${process.env.URL}/blog/${postid}`;
   const res = await fetch(url);
   const data = await res.json();
-
   return data;
 }
 
