@@ -122,6 +122,7 @@ const postController = {
 			});
 		},
 	],
+
 	deletePost: (req: Request, res: Response) =>
 		Post.findByIdAndDelete(req.params.postid, (err: CallbackError) => {
 			if (err) {

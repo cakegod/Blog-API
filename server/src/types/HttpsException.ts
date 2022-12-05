@@ -1,12 +1,9 @@
 class CHttpException extends Error {
-	status: number;
-
-	message: string;
+	readonly status: number;
 
 	constructor(status: number, message: string) {
 		super(message);
 		this.status = status;
-		this.message = message;
 	}
 }
 
