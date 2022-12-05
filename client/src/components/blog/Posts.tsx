@@ -16,11 +16,7 @@ function asyncComponent<T, R>(fn: (arg: T) => Promise<R>): (arg: T) => R {
 
 const Posts = asyncComponent(async () => {
   const posts = await fetchPosts();
-  return posts === undefined ? (
-    <h3 className='text-2xl dark:text-zinc-100'>
-      There are currently no posts available
-    </h3>
-  ) : (
+  return posts ? (
     <>
       {posts.map((post) => (
         <Link key={post._id} href={`/blog/${post.slug}`}>
@@ -38,7 +34,13 @@ const Posts = asyncComponent(async () => {
         </Link>
       ))}
     </>
-  );
+  ) : (
+    <h3 className='text-2xl dark:text-zinc-100'>
+      There are currently no posts available
+    </h3>
+  ) 
 });
 
 export default Posts;
+
+
