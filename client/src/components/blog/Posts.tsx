@@ -3,7 +3,8 @@ import { PostProps } from '@/types';
 import { composeDate } from '@/util/composeDate';
 
 async function fetchPosts(): Promise<PostProps[]> {
-  const res = await fetch(new URL('/blog', process.env.URL));
+  const url = `${process.env.URL}/blog/`;
+  const res = await fetch(url);
   const data = await res.json();
 
   return data;
@@ -38,9 +39,7 @@ const Posts = asyncComponent(async () => {
     <h3 className='text-2xl dark:text-zinc-100'>
       There are currently no posts available
     </h3>
-  ) 
+  );
 });
 
 export default Posts;
-
-
