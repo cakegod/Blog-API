@@ -10,6 +10,7 @@ import passport from 'passport';
 import userRouter from './routes/user';
 import blogRouter from './routes/blog';
 import indexRouter from './routes/index';
+import dashboardRouter from './routes/dashboard'
 import CHttpException from './types';
 import passportConfig from './passport';
 
@@ -64,6 +65,7 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/blog', blogRouter);
 app.use('/user', userRouter);
+app.use('/dashboard', dashboardRouter)
 
 /* --- CATCH 404 --- */
 app.use((req: Request, res: Response, next: NextFunction) => {
