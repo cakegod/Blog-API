@@ -12,6 +12,15 @@ const dashboardController = {
 				res.json(result);
 			}),
 
+	updatePost: (req: Request, res: Response, next: NextFunction) =>
+		Post.findByIdAndUpdate({ slug: req.params.slug }, { $set: { published: !published } }, {}, err => {
+			if (err) {
+				return next(err);
+			}
+
+			res.status(200).end();
+		})
+
 }
 
 export default dashboardController
