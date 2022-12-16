@@ -23,9 +23,8 @@ const navigationLinks = [
 
 function Header() {
   const pathname = usePathname();
-
   const underlineNavLink = (path: string) =>
-    pathname === `/${path}`
+    pathname === `${path}`
       ? 'dark text-red-600 dark:text-red-400 underline decoration-1'
       : '';
 
