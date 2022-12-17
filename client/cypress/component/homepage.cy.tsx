@@ -1,18 +1,21 @@
 import RootLayout from '../../src/app/layout';
+import '@testing-library/cypress/add-commands';
 
 describe('homepage', () => {
   beforeEach(() => cy.mount(<RootLayout />));
 
   it('toggle theme', () => {
+    cy.findByRole('button').as('themeButton');
+
     cy.get('html').should('have.class', 'light');
 
-    cy.get('[aria-label="theme toggler"]').click();
+    cy.get('@themeButton').click();
     cy.get('html').should('have.class', 'dark');
 
-    cy.get('[aria-label="theme toggler"]').click();
+    cy.get('@themeButton').click();
     cy.get('html').should('have.class', 'light');
 
-    cy.get('[aria-label="theme toggler"]').click();
+    cy.get('@themeButton').click();
     cy.get('html').should('have.class', 'dark');
   });
 
@@ -26,16 +29,15 @@ describe('homepage', () => {
     ];
 
     links.forEach((link) => {
-      cy.get(`a[href="${link.path}"]`)
+      cy.findByRole(`link`, { name: link.name })
         .should('be.visible')
-        .and('have.text', link.name)
         .and('have.attr', 'href')
         .and('include', link.path);
     });
   });
 
   it('renders theme toggler', () => {
-    cy.get("[aria-label='theme toggler']").should('be.visible');
+    cy.findByRole('button').should('be.visible');
   });
 
   it('renders footer', () => {

@@ -1,4 +1,5 @@
 import FormInput from '@/components/blog/contact/FormInput';
+import '@testing-library/cypress/add-commands';
 
 const obj = {
   name: 'email',
@@ -13,18 +14,19 @@ describe('form', () => {
     const labels = ['email', 'contact', 'message', 'fish', 'bird'];
     labels.forEach((label) => {
       cy.mount(<FormInput data={{ ...obj, label }} />);
-      cy.screenshot();
-      cy.get('label').should('be.visible').contains(label);
+      cy.findByText(label).should('be.visible');
     });
   });
 
   it('renders input', () => {
     cy.mount(<FormInput data={obj} />);
-    cy.get('input').should('be.visible').should('have.value', 'hello');
+    cy.findByRole('textbox', { name: /email/i })
+      .should('be.visible')
+      .and('have.value', 'hello');
   });
 
   it('renders textarea', () => {
     cy.mount(<FormInput data={{ ...obj, textarea: true }} />);
-    cy.get('textarea').should('be.visible').should('have.value', 'hello');
+    cy.findByRole('textbox').should('be.visible').and('have.value', 'hello');
   });
 });
