@@ -33,8 +33,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/util/te.js",
-    "cypress",
-    "cypress/e2e/1-getting-started"
+    "cypress"
   ],
   "exclude": ["node_modules"],
   "moduleResolution": ["node_modules", ".next", "node"]
