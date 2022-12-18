@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start -p 8080",
     "lint": "next lint",
-    "cypress": "cypress open"
+    "cy open": "cypress open",
+    "cy-c": "cypress run --component --browser chrome",
+    "cy-e2e": "cypress run --e2e --browser chrome"
   },
   "dependencies": {
     "@giscus/react": "^2.2.3",
