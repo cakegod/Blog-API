@@ -1,5 +1,5 @@
 import RootLayout from '../../src/app/layout';
-import '@testing-library/cypress/add-commands';
+
 
 describe('homepage', () => {
   beforeEach(() => cy.mount(<RootLayout />));

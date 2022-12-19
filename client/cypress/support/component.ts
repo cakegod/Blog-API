@@ -36,6 +36,6 @@ declare global {
 Cypress.Commands.add('mount', mount);
 
 import 'tailwindcss/tailwind.css';
-
+import '@testing-library/cypress/add-commands';
 // Example use:
 // cy.mount(<MyComponent />)

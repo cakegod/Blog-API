@@ -1,5 +1,5 @@
 import Contact from '@/app/contact/page';
-import '@testing-library/cypress/add-commands';
+
 
 const form = [
   {

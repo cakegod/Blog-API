@@ -1,4 +1,3 @@
-import AboutMe from '@/components/blog/AboutMe';
 import { composeDate } from '@/util/composeDate';
 
 interface Date {
