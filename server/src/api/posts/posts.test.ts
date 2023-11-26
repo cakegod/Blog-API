@@ -1,15 +1,18 @@
 import request from "supertest";
 import express from "express";
 import blogRouter from "./posts.routes";
+import userRouter from "../user/user.routes";
 import { PROJECTION } from "./posts.constants";
 import { posts } from "./posts.fixture";
 import { PostModel } from "./posts.model";
-import { describe } from "vitest";
+import passportConfig from "../../passport";
 
 const app = express();
+passportConfig();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/posts", blogRouter);
+app.use("/user", userRouter);
 
 beforeEach(async () => {
 	await PostModel.deleteMany();
@@ -114,9 +117,31 @@ describe("/posts/:slug", () => {
 });
 
 describe("/:slug/publish-action", () => {
+	// TODO: Improve this. I don't like this weird setup token variable usage on all tests.
+	let token: string;
+
+	beforeAll(async () => {
+		const agent = request.agent(app);
+
+		await agent.post("/user/signup").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+			passwordConfirm: "foo",
+		});
+		const res = await agent.post("/user/login").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+		});
+
+		token = res.body;
+	});
+
+	//
+
 	it("POST should publish the post when the action's value is 'publish'", async () => {
 		const res = await request(app)
 			.put(`/posts/${posts[3].slug}/publish-action`)
+			.auth(token, { type: "bearer" })
 			.send({ action: "publish" });
 
 		expect(res.status).to.equal(200);
@@ -126,6 +151,7 @@ describe("/:slug/publish-action", () => {
 	it("POST should unpublish the post when the action's value is 'unpublish'", async () => {
 		const res = await request(app)
 			.put(`/posts/${posts[3].slug}/publish-action`)
+			.auth(token, { type: "bearer" })
 			.send({ action: "unpublish" });
 
 		expect(res.status).to.equal(200);
@@ -135,6 +161,7 @@ describe("/:slug/publish-action", () => {
 	it("POST should return 404 when the post does not exist", async () => {
 		const res = await request(app)
 			.put(`/posts/foo/publish-action`)
+			.auth(token, { type: "bearer" })
 			.send({ action: "unpublish" });
 
 		expect(res.status).to.equal(404);
@@ -143,16 +170,25 @@ describe("/:slug/publish-action", () => {
 	it("POST should return 404 when the action's value is invalid", async () => {
 		const res = await request(app)
 			.put(`/posts/${posts[3].slug}/publish-action`)
+			.auth(token, { type: "bearer" })
 			.send({ action: "invalid" });
 
 		expect(res.status).to.equal(404);
 	});
 
 	it("POST should return 404 when the action is not sent", async () => {
-		const res = await request(app).put(
-			`/posts/${posts[3].slug}/publish-action`,
-		);
+		const res = await request(app)
+			.put(`/posts/${posts[3].slug}/publish-action`)
+			.auth(token, { type: "bearer" });
 
 		expect(res.status).to.equal(404);
+	});
+
+	it("POST should return 401 when jwt token not sent", async () => {
+		const res = await request(app)
+			.put(`/posts/${posts[3].slug}/publish-action`)
+			.send({ action: "publish" });
+
+		expect(res.status).to.equal(401);
 	});
 });

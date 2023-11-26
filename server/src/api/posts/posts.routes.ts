@@ -7,6 +7,7 @@ import {
 	putPost,
 	togglePost,
 } from "./posts.handlers";
+import passport from "passport";
 
 const router = express.Router();
 
@@ -16,6 +17,10 @@ router.post("/", postPost);
 router.get("/:slug", getPost);
 router.put("/:slug", putPost);
 router.delete("/:slug", deletePost);
-router.put("/:slug/publish-action", togglePost);
+router.put(
+	"/:slug/publish-action",
+	passport.authenticate("jwt", { session: false }),
+	togglePost,
+);
 
 export default router;

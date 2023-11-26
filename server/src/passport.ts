@@ -1,45 +1,92 @@
-import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
-import { UserModel } from "./models/UserModel";
+import passport from "passport";
+import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
+import { UserModel } from "./api/user/user.model";
 
 interface PassportUser extends Express.User {
 	id?: string;
 }
 
 const passportConfig = () => {
-	const strategy = new LocalStrategy(async (username, password, done) => {
-		try {
-			const user = await UserModel.findOne({ username });
+	passport.use(
+		"login",
+		new LocalStrategy(
+			{ usernameField: "email", passwordField: "password" },
+			async (username, password, done) => {
+				try {
+					const user = await UserModel.findOne({ email: username });
 
-			if (!user) {
-				return done(null, false, { message: "Incorrect username" });
-			}
+					if (!user) {
+						return done(null, false, {
+							message: "Incorrect username",
+						});
+					}
 
-			if (!(await bcrypt.compare(password, user.password))) {
-				return done(null, false, { message: "Incorrect password" });
-			}
+					if (!(await bcrypt.compare(password, user.password))) {
+						return done(null, false, {
+							message: "Incorrect password",
+						});
+					}
 
-			done(null, user);
-		} catch (err) {
-			done(err);
-		}
-	});
+					done(null, user);
+				} catch (err) {
+					done(err);
+				}
+			},
+		),
+	);
 
-	passport.use(strategy);
+	passport.use(
+		"signup",
+		new LocalStrategy(
+			{
+				usernameField: "email",
+				passwordField: "password",
+			},
+			async (email, password, done) => {
+				try {
+					const user = await UserModel.create({ email, password });
 
-	passport.serializeUser((user: PassportUser, done) => {
-		done(null, user.id);
-	});
+					return done(null, user);
+				} catch (error) {
+					done(error);
+				}
+			},
+		),
+	);
 
-	passport.deserializeUser(async (id, done) => {
-		try {
-			const user = await UserModel.findById(id);
-			done(null, user);
-		} catch (err) {
-			done(err);
-		}
-	});
+	passport.use(
+		"jwt",
+		new JWTStrategy(
+			{
+				jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+				secretOrKey: "SECRET!",
+			},
+			async (token, done) => {
+				const user = await UserModel.findById(token.id);
+
+				if (user) {
+					return done(null, user);
+				} else {
+					return done(null, false);
+				}
+			},
+		),
+	);
+
+	// passport.serializeUser((user: PassportUser, done) => {
+	// 	done(null, user.id);
+	// });
+	//
+	// passport.deserializeUser(async (id, done) => {
+	// 	try {
+	// 		const user = await UserModel.findById(id);
+	// 		done(null, user);
+	// 	} catch (err) {
+	// 		done(err);
+	// 	}
+	// });
 };
 
 export default passportConfig;
