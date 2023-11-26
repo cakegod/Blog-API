@@ -1,7 +1,11 @@
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import bcrypt from 'bcryptjs';
-import { UserModel } from './models/UserModel';
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from "bcryptjs";
+import { UserModel } from "./models/UserModel";
+
+interface PassportUser extends Express.User {
+	id?: string;
+}
 
 const passportConfig = () => {
 	const strategy = new LocalStrategy(async (username, password, done) => {
@@ -9,11 +13,11 @@ const passportConfig = () => {
 			const user = await UserModel.findOne({ username });
 
 			if (!user) {
-				return done(null, false, { message: 'Incorrect username' });
+				return done(null, false, { message: "Incorrect username" });
 			}
 
 			if (!(await bcrypt.compare(password, user.password))) {
-				return done(null, false, { message: 'Incorrect password' });
+				return done(null, false, { message: "Incorrect password" });
 			}
 
 			done(null, user);
@@ -23,10 +27,6 @@ const passportConfig = () => {
 	});
 
 	passport.use(strategy);
-
-	interface PassportUser extends Express.User {
-		id?: string;
-	}
 
 	passport.serializeUser((user: PassportUser, done) => {
 		done(null, user.id);

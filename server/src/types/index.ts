@@ -1,3 +1,3 @@
-import CHttpException from './HttpsException';
+import CHttpException from "./HttpsException";
 
 export default CHttpException;

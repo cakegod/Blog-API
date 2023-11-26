@@ -1,4 +1,4 @@
-import { InferSchemaType, model, Schema } from 'mongoose';
+import { InferSchemaType, model, Schema } from "mongoose";
 
 const PostSchema = new Schema({
 	title: {
@@ -9,7 +9,7 @@ const PostSchema = new Schema({
 	description: { type: String, required: true },
 	content: { type: String, required: true },
 	date: { type: Schema.Types.Date, required: true, default: Date.now },
-	published: { type: Boolean, required: true, default: true },
+	published: { type: Boolean, required: true, default: false },
 	readTime: {
 		type: String,
 		default: function () {
@@ -24,8 +24,8 @@ const PostSchema = new Schema({
 		default: function () {
 			return (this as Post).title
 				.toLowerCase()
-				.replace(/ /g, '-')
-				.replace(/[^\w-]+/g, '');
+				.replace(/ /g, "-")
+				.replace(/[^\w-]+/g, "");
 		},
 	},
 });
@@ -35,6 +35,6 @@ const PostSchema = new Schema({
 // });
 
 type Post = InferSchemaType<typeof PostSchema>;
-const PostModel = model('Post', PostSchema);
+const PostModel = model("Post", PostSchema);
 
-export { PostModel, Post, PostSchema };
+export { PostModel, Post };

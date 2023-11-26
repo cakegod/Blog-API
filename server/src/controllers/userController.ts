@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import { check, validationResult } from 'express-validator';
-import bcrypt from 'bcryptjs';
-import passport from 'passport';
-import { UserModel } from '../models/UserModel';
+import { Request, Response, NextFunction } from "express";
+import { check, validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
+import passport from "passport";
+import { UserModel } from "../models/UserModel";
 
 const userController = {
-	postLogin: passport.authenticate('jwt', { session: false }),
+	postLogin: passport.authenticate("jwt", { session: false }),
 
 	// postRegister: [
 	// 	check('email', 'email must not be empty')

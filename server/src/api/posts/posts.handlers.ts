@@ -1,17 +1,16 @@
-import { Request, Response } from 'express';
-import { check, validationResult } from 'express-validator';
-import { PostModel } from '../models/PostModel';
-
-export const PROJECTION = ['title', 'description', 'date', 'readTime', 'slug'];
+import { Request, Response } from "express";
+import { check, validationResult } from "express-validator";
+import { PostModel } from "./posts.model";
+import { PROJECTION } from "./posts.constants";
 
 const validatePost = [
-	check('title', 'Title must not be empty').not().isEmpty().trim().escape(),
-	check('description', 'Description must not be empty')
+	check("title", "Title must not be empty").not().isEmpty().trim().escape(),
+	check("description", "Description must not be empty")
 		.not()
 		.isEmpty()
 		.trim()
 		.escape(),
-	check('content', 'Content must not be empty')
+	check("content", "Content must not be empty")
 		.not()
 		.isEmpty()
 		.trim()
@@ -43,7 +42,7 @@ const postPost = [
 		if (await PostModel.exists({ title: req.body.title })) {
 			return res.status(400).json({
 				errors: {
-					title: 'A post with that title already exists',
+					title: "A post with that title already exists",
 				},
 			});
 		}
@@ -54,13 +53,18 @@ const postPost = [
 			content: req.body.content,
 		});
 
-		res.status(201).end();
+		res.status(204).end();
 	},
 ];
 
 const getPost = async (req: Request, res: Response) => {
 	const post = await PostModel.findOne({ slug: req.params.slug });
-	res.json(post).end();
+
+	if (post) {
+		res.json(post).end();
+	} else {
+		res.status(404).end();
+	}
 };
 
 const putPost = [
@@ -82,14 +86,32 @@ const putPost = [
 			{ new: true },
 		);
 
-		res.status(201).json(update).end();
+		res.status(200).json(update).end();
 	},
 ];
 
 const deletePost = async (req: Request, res: Response) => {
-	await PostModel.findOneAndDelete({
+	const post = await PostModel.findOneAndDelete({
 		slug: req.params.slug,
 	});
+
+	if (!post) {
+		return res.status(404).end();
+	}
+
+	res.status(204).end();
+};
+
+// TODO
+const publishPost = async (req: Request, res: Response) => {
+	const post = await PostModel.findOneAndUpdate(
+		{ slug: req.params.slug },
+		{ published: true },
+	);
+
+	if (!post) {
+		return res.status(404).end();
+	}
 
 	res.status(201).end();
 };
