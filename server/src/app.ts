@@ -3,25 +3,25 @@ import createHttpError from 'http-errors';
 import logger from 'morgan';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
-import { config } from 'dotenv';
+import dot from 'dotenv';
 import cors from 'cors';
 import session from 'express-session';
 import passport from 'passport';
 import userRouter from './routes/user';
-import blogRouter from './routes/blog';
+import blogRouter from './routes/posts';
 import indexRouter from './routes/index';
-import dashboardRouter from './routes/dashboard'
+import dashboardRouter from './routes/dashboard';
 import CHttpException from './types';
 import passportConfig from './passport';
 
 /* --- INIT DOTENV --- */
-config();
+dot.config();
 
 /* --- DATABASE CONNECTION --- */
-mongoose.connect(process.env.MONGO_URI!);
+mongoose.connect(process.env.MONGO_URL!);
 
 mongoose.connection.on('error', err =>
-	console.log(`MongoDB connection error: ${err}`)
+	console.log(`MongoDB connection error: ${err}`),
 );
 
 mongoose.connection.on('connected', () => {
@@ -58,14 +58,13 @@ app.use((req, res, next) => {
 
 /* --- INIT PASSPORT --- */
 passportConfig();
-app.use(passport.initialize());
 app.use(passport.session());
 
 /* --- ROUTES --- */
 app.use('/', indexRouter);
 app.use('/blog', blogRouter);
 app.use('/user', userRouter);
-app.use('/dashboard', dashboardRouter)
+app.use('/dashboard', dashboardRouter);
 
 /* --- CATCH 404 --- */
 app.use((req: Request, res: Response, next: NextFunction) => {

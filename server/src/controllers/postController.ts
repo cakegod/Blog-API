@@ -1,135 +1,100 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
-import { CallbackError } from 'mongoose';
-import { Post } from '../models/Post';
+import { PostModel } from '../models/PostModel';
+
+export const PROJECTION = ['title', 'description', 'date', 'readTime', 'slug'];
+
+const validatePost = [
+	check('title', 'Title must not be empty').not().isEmpty().trim().escape(),
+	check('description', 'Description must not be empty')
+		.not()
+		.isEmpty()
+		.trim()
+		.escape(),
+	check('content', 'Content must not be empty')
+		.not()
+		.isEmpty()
+		.trim()
+		.escape(),
+];
 
 const postController = {
-	getPosts: (req: Request, res: Response, next: NextFunction) =>
-		Post.find(
+	getPosts: async (_req: Request, res: Response) => {
+		const posts = await PostModel.find(
 			{ $set: { published: true }, slug: { $exists: true } },
-			'title description date readTime slug'
-		)
-			.sort({ date: -1 })
-			.exec((err, result) => {
-				if (err) {
-					return next(err);
-				}
-				res.json(result);
-			}),
+			PROJECTION,
+		).sort({ date: -1 });
+
+		res.json(posts);
+	},
 
 	postPost: [
-		check('title', 'Title must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		check('description', 'Description must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		check('content', 'Content must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		(req: Request, res: Response, next: NextFunction) => {
+		...validatePost,
+		async (req: Request, res: Response) => {
 			const errors = validationResult(req);
+
 			if (!errors.isEmpty()) {
-				res.json({
+				return res.status(400).json({
 					title: req.body.title,
 					description: req.body.description,
 					content: req.body.content,
 					errors: errors.array(),
 				});
-				return;
 			}
-			const post = new Post({
+
+			if (await PostModel.exists({ title: req.body.title })) {
+				return res.status(400).json({
+					errors: {
+						title: 'A post with that title already exists',
+					},
+				});
+			}
+
+			await PostModel.create({
 				title: req.body.title,
 				description: req.body.description,
 				content: req.body.content,
-				readTime: `${Math.ceil(
-					req.body.content.trim().split(/\s+/).length / 250
-				)} min read`,
-				date: Date.now(),
-				slug: req.body.title
-					.toLowerCase()
-					.replace(/ /g, '-')
-					.replace(/[^\w-]+/g, ''),
-			});
-
-			post.save(err => {
-				if (err) {
-					return next(err);
-				}
 			});
 
 			res.status(201).end();
 		},
 	],
 
-	getPost: (req: Request, res: Response, next: NextFunction) => {
-		Post.findOne({ slug: req.params.slug }).exec((err, result) => {
-			if (err) {
-				return next(err);
-			}
-			res.json(result);
-		});
+	getPost: async (req: Request, res: Response) => {
+		const post = await PostModel.findOne({ slug: req.params.slug });
+		res.json(post).end();
 	},
 
 	putPost: [
-		check('title', 'Title must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		check('description', 'Description must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		check('content', 'Content must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		(req: Request, res: Response, next: NextFunction) => {
+		...validatePost,
+		async (req: Request, res: Response) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				res.status(400).json({
+				return res.status(400).json({
 					title: req.body.title,
 					description: req.body.description,
 					content: req.body.content,
 					errors: errors.array(),
 				});
-				return;
 			}
-			const post = new Post({
-				title: req.body.title,
-				description: req.body.description,
-				content: req.body.content,
-				_id: req.body.id,
-				date: req.body.date,
-				published: true,
-			});
 
-			Post.findByIdAndUpdate(req.params.postid, post, {}, err => {
-				if (err) {
-					return next(err);
-				}
+			const update = await PostModel.findOneAndUpdate(
+				{ slug: req.params.slug },
+				req.body,
+				{ new: true },
+			);
 
-				res.status(200).end();
-			});
+			res.status(201).json(update).end();
 		},
 	],
 
-	deletePost: (req: Request, res: Response) =>
-		Post.findByIdAndDelete(req.params.postid, (err: CallbackError) => {
-			if (err) {
-				return err;
-			}
-			res.status(200).end();
-		}),
+	deletePost: async (req: Request, res: Response) => {
+		await PostModel.findOneAndDelete({
+			slug: req.params.slug,
+		});
+
+		res.status(201).end();
+	},
 };
 
 export default postController;

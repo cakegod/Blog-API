@@ -1,11 +1,11 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy, VerifyFunction } from 'passport-local';
 import bcrypt from 'bcryptjs';
-import { User } from './models/User';
+import { UserModel } from './models/UserModel';
 
 const passportConfig = () => {
 	const verify: VerifyFunction = (username, password, done) => {
-		User.findOne({ username }).exec((err, user) => {
+		UserModel.findOne({ username }).exec((err, user) => {
 			if (err) {
 				return done(err);
 			}
@@ -37,7 +37,7 @@ const passportConfig = () => {
 	});
 
 	passport.deserializeUser((id, done) => {
-		User.findById(id).exec((err, user) => {
+		UserModel.findById(id).exec((err, user) => {
 			done(err, user);
 		});
 	});
