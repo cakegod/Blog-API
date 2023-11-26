@@ -1,30 +1,26 @@
 import passport from 'passport';
-import { Strategy as LocalStrategy, VerifyFunction } from 'passport-local';
+import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 import { UserModel } from './models/UserModel';
 
 const passportConfig = () => {
-	const verify: VerifyFunction = (username, password, done) => {
-		UserModel.findOne({ username }).exec((err, user) => {
-			if (err) {
-				return done(err);
-			}
+	const strategy = new LocalStrategy(async (username, password, done) => {
+		try {
+			const user = await UserModel.findOne({ username });
+
 			if (!user) {
 				return done(null, false, { message: 'Incorrect username' });
 			}
-			bcrypt.compare(password, user.password, (_err, res) => {
-				if (_err) {
-					return done(_err);
-				}
-				if (res) {
-					return done(null, user);
-				}
-				return done(null, false, { message: 'Incorrect password' });
-			});
-		});
-	};
 
-	const strategy = new LocalStrategy(verify);
+			if (!(await bcrypt.compare(password, user.password))) {
+				return done(null, false, { message: 'Incorrect password' });
+			}
+
+			done(null, user);
+		} catch (err) {
+			done(err);
+		}
+	});
 
 	passport.use(strategy);
 
@@ -36,10 +32,13 @@ const passportConfig = () => {
 		done(null, user.id);
 	});
 
-	passport.deserializeUser((id, done) => {
-		UserModel.findById(id).exec((err, user) => {
-			done(err, user);
-		});
+	passport.deserializeUser(async (id, done) => {
+		try {
+			const user = await UserModel.findById(id);
+			done(null, user);
+		} catch (err) {
+			done(err);
+		}
 	});
 };
 

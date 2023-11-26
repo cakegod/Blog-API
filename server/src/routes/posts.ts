@@ -1,13 +1,19 @@
 import express from 'express';
-import postController from '../controllers/postController';
+import {
+	deletePost,
+	getPost,
+	getPosts,
+	postPost,
+	putPost,
+} from '../controllers/postController';
 
 const router = express.Router();
 
-router.get('/', postController.getPosts);
-router.post('/', postController.postPost);
+router.get('/', getPosts);
+router.post('/', postPost);
 
-router.get('/:slug', postController.getPost);
-router.put('/:slug', postController.putPost);
-router.delete('/:slug', postController.deletePost);
+router.get('/:slug', getPost);
+router.put('/:slug', putPost);
+router.delete('/:slug', deletePost);
 
 export default router;
