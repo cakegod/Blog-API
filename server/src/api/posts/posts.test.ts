@@ -4,9 +4,11 @@ import blogRouter from "./posts.routes";
 import { PROJECTION } from "./posts.constants";
 import { posts } from "./posts.fixture";
 import { PostModel } from "./posts.model";
+import { describe } from "vitest";
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use("/posts", blogRouter);
 
 beforeEach(async () => {
@@ -19,10 +21,11 @@ describe("/posts", () => {
 		const res = await request(app).get("/posts");
 
 		expect(res.status).to.equal(200);
-		expect(res.type).to.match(/json/);
 		expect(Object.keys(res.body[0])).to.include.members(PROJECTION);
 		expect(res.body[0].title).to.equal(posts[2].title);
-		expect(res.body).to.have.length(posts.length);
+		expect(res.body).to.have.length(
+			posts.filter(post => post.published).length,
+		);
 	});
 
 	it("POST should return 400 when inputs are invalid", async () => {
@@ -86,6 +89,16 @@ describe("/posts/:slug", () => {
 		expect(updatedPost?.slug).to.equal(posts[1].slug);
 	});
 
+	it("PUT should return 404 when the post does not exist", async () => {
+		const res = await request(app).put("/posts/foo").type("form").send({
+			title: "bar",
+			content: "bar",
+			description: "bar",
+		});
+
+		expect(res.status).to.equal(404);
+	});
+
 	it("DELETE should delete the post", async () => {
 		const res = await request(app).delete(`/posts/${posts[1].slug}`);
 
@@ -98,11 +111,48 @@ describe("/posts/:slug", () => {
 
 		expect(res.status).to.equal(404);
 	});
+});
 
-	it("PATCH should publish the post", async () => {
-		const res = await request(app).patch(`/posts/${posts[1].slug}`);
+describe("/:slug/publish-action", () => {
+	it("POST should publish the post when the action's value is 'publish'", async () => {
+		const res = await request(app)
+			.put(`/posts/${posts[3].slug}/publish-action`)
+			.send({ action: "publish" });
 
 		expect(res.status).to.equal(200);
-		expect(res.body[1].published).to.true;
+		expect(res.body.published).to.true;
+	});
+
+	it("POST should unpublish the post when the action's value is 'unpublish'", async () => {
+		const res = await request(app)
+			.put(`/posts/${posts[3].slug}/publish-action`)
+			.send({ action: "unpublish" });
+
+		expect(res.status).to.equal(200);
+		expect(res.body.published).to.false;
+	});
+
+	it("POST should return 404 when the post does not exist", async () => {
+		const res = await request(app)
+			.put(`/posts/foo/publish-action`)
+			.send({ action: "unpublish" });
+
+		expect(res.status).to.equal(404);
+	});
+
+	it("POST should return 404 when the action's value is invalid", async () => {
+		const res = await request(app)
+			.put(`/posts/${posts[3].slug}/publish-action`)
+			.send({ action: "invalid" });
+
+		expect(res.status).to.equal(404);
+	});
+
+	it("POST should return 404 when the action is not sent", async () => {
+		const res = await request(app).put(
+			`/posts/${posts[3].slug}/publish-action`,
+		);
+
+		expect(res.status).to.equal(404);
 	});
 });

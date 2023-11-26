@@ -59,7 +59,7 @@ app.use("/user", userRouter);
 app.use("/dashboard", dashboardRouter);
 
 /* --- CATCH 404 --- */
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((_req: Request, _res: Response, next: NextFunction) => {
 	next(createHttpError(404));
 });
 

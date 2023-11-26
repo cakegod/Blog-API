@@ -5,6 +5,7 @@ import {
 	getPosts,
 	postPost,
 	putPost,
+	togglePost,
 } from "./posts.handlers";
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.post("/", postPost);
 router.get("/:slug", getPost);
 router.put("/:slug", putPost);
 router.delete("/:slug", deletePost);
+router.put("/:slug/publish-action", togglePost);
 
 export default router;

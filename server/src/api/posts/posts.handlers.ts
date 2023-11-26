@@ -80,13 +80,17 @@ const putPost = [
 			});
 		}
 
-		const update = await PostModel.findOneAndUpdate(
+		const updatedPost = await PostModel.findOneAndUpdate(
 			{ slug: req.params.slug },
 			req.body,
 			{ new: true },
 		);
 
-		res.status(200).json(update).end();
+		if (!updatedPost) {
+			return res.status(404).end();
+		}
+
+		res.status(200).json(updatedPost).end();
 	},
 ];
 
@@ -102,18 +106,33 @@ const deletePost = async (req: Request, res: Response) => {
 	res.status(204).end();
 };
 
-// TODO
-const publishPost = async (req: Request, res: Response) => {
-	const post = await PostModel.findOneAndUpdate(
-		{ slug: req.params.slug },
-		{ published: true },
-	);
+const togglePost = async (req: Request, res: Response) => {
+	function actionResult(action: "publish" | "unpublish") {
+		switch (action) {
+			case "publish":
+				return true;
+			case "unpublish":
+				return false;
+		}
+	}
 
-	if (!post) {
+	const isPublished = actionResult(req.body?.action);
+
+	if (isPublished === undefined) {
 		return res.status(404).end();
 	}
 
-	res.status(201).end();
+	const updatedPost = await PostModel.findOneAndUpdate(
+		{ slug: req.params.slug },
+		{ published: isPublished },
+		{ new: true },
+	);
+
+	if (!updatedPost) {
+		return res.status(404).end();
+	}
+
+	res.json(updatedPost).end();
 };
 
-export { getPosts, postPost, getPost, putPost, deletePost };
+export { getPosts, postPost, getPost, putPost, deletePost, togglePost };
