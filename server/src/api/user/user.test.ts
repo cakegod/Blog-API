@@ -19,6 +19,47 @@ describe("/user/signup", () => {
 		expect(await UserModel.exists({ email: "cake@fake.com" })).to.not.be
 			.null;
 	});
+
+	describe("POST should return when inputs are invalid", () => {
+		it("missing confirm password", async () => {
+			const res = await request(app)
+				.post("/user/signup")
+				.type("form")
+				.send({
+					email: "cake@fake.com",
+					password: "foo",
+					// Missing password
+				});
+
+			expect(res.status).to.equal(400);
+		});
+
+		it("unequal password and password confirm", async () => {
+			const res = await request(app)
+				.post("/user/signup")
+				.type("form")
+				.send({
+					email: "cake@fake.com",
+					password: "foo",
+					passwordConfirm: "nope",
+				});
+
+			expect(res.status).to.equal(400);
+		});
+
+		it("invalid email", async () => {
+			const res = await request(app)
+				.post("/user/signup")
+				.type("form")
+				.send({
+					email: "justCake",
+					password: "foo",
+					passwordConfirm: "foo",
+				});
+
+			expect(res.status).to.equal(400);
+		});
+	});
 });
 
 describe("/user/login", () => {
@@ -39,28 +80,41 @@ describe("/user/login", () => {
 		expect(res.status).to.equal(200);
 
 		// Check if it exists in the db
-		expect(await UserModel.exists({ email: "cake@fake.com" })).to.not.be
-			.null;
+		expect(await UserModel.exists({ email: "cake@fake.com" })).toBeTruthy();
 
 		// token is present
 		expect(res.body).toBeTypeOf("string");
 		expect(res.body).toBeTruthy();
 	});
 
-	it("POST should return 400 on a failed login", async () => {
-		const agent = request.agent(app);
+	describe("POST should return 401 on a failed login", () => {
+		it("wrong password", async () => {
+			const agent = request.agent(app);
 
-		await agent.post("/user/signup").type("form").send({
-			email: "cake@fake.com",
-			password: "foo",
-			passwordConfirm: "foo",
+			await agent.post("/user/signup").type("form").send({
+				email: "cake@fake.com",
+				password: "foo",
+				passwordConfirm: "foo",
+			});
+
+			const res = await agent.post("/user/login").type("form").send({
+				email: "cake@fake.com",
+				password: "wrongPassword",
+			});
+
+			expect(res.status).to.equal(401);
 		});
 
-		const res = await agent.post("/user/login").type("form").send({
-			email: "cake@fake.com",
-			password: "fooo",
-		});
+		it("non-existent user", async () => {
+			const res = await request(app)
+				.post("/user/login")
+				.type("form")
+				.send({
+					email: "doesNotExist",
+					password: "foo",
+				});
 
-		expect(res.status).to.equal(401);
+			expect(res.status).to.equal(401);
+		});
 	});
 });
