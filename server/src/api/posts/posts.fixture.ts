@@ -1,6 +1,6 @@
-import { PostModel } from "./posts.model";
+import { Post, PostModel } from "./posts.model";
 
-export const posts = [
+const posts = [
 	{
 		title: "Introduction to JavaScript",
 		description: "A brief overview of JavaScript programming language",
@@ -31,3 +31,13 @@ export const posts = [
 		published: false,
 	},
 ].map(post => new PostModel(post));
+
+const publishedPostSlug: Post["slug"] = posts.find(
+	post => post.published,
+)!.slug;
+const unpublishedPostSlug: Post["slug"] = posts.find(
+	post => !post.published,
+)!.slug;
+const fakePostSlug = "foo";
+
+export { posts, publishedPostSlug, unpublishedPostSlug, fakePostSlug };

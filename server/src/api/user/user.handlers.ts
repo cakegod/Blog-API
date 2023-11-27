@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import passport from "passport";
 import jwt from "jsonwebtoken";
-import { User } from "./user.model";
+import { User, UserModel } from "./user.model";
+import { Document } from "mongoose";
 
 const validateUser = [
 	check("email", "email must not be empty")
@@ -19,7 +20,7 @@ const validateUser = [
 
 const postLogin = [
 	passport.authenticate("login", { session: false }),
-	(req: Request & { user: User }, res: Response) => {
+	(req: Request & { user: User & Document }, res: Response) => {
 		res.json(
 			jwt.sign(
 				{
@@ -39,12 +40,22 @@ const postSignup = [
 		const errors = validationResult(req);
 
 		if (!errors.isEmpty()) {
-			return res.status(400).json({
-				errors: errors.array(),
-			});
+			return res
+				.status(400)
+				.json({
+					errors: errors.array(),
+				})
+				.end();
 		}
 
-		passport.authenticate("signup", { session: false })(req, res, next);
+		const user = await UserModel.create({
+			email: req.body.email,
+			password: req.body.password,
+		});
+
+		if (!user) {
+			return res.status(400).end();
+		}
 
 		res.status(200).end();
 	},

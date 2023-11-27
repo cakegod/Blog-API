@@ -132,7 +132,7 @@ const togglePost = async (req: Request, res: Response) => {
 		return res.status(404).end();
 	}
 
-	res.json(updatedPost).end();
+	res.status(200).json(updatedPost).end();
 };
 
 export { getPosts, postPost, getPost, putPost, deletePost, togglePost };

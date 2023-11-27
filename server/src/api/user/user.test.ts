@@ -1,38 +1,66 @@
-import express from "express";
-import userRouter from "./user.routes";
 import request from "supertest";
 import { UserModel } from "./user.model";
-import passportConfig from "../../passport";
+import { setupServer } from "../../tests.setup";
+import { describe } from "vitest";
 
-const app = express();
-passportConfig();
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use("/user", userRouter);
+const app = setupServer();
 
-it("POST should signup user when inputs are valid", async () => {
-	const agent = request.agent(app);
-	const res = await agent.post("/user/signup").type("form").send({
-		email: "cake@fake.com",
-		password: "foo",
-		passwordConfirm: "foo",
+describe("/user/signup", () => {
+	it("POST should signup user when inputs are valid", async () => {
+		const res = await request(app).post("/user/signup").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+			passwordConfirm: "foo",
+		});
+
+		expect(res.status).to.equal(200);
+
+		// Check if it exists in the db
+		expect(await UserModel.exists({ email: "cake@fake.com" })).to.not.be
+			.null;
 	});
-
-	expect(res.status).to.equal(200);
-
-	// Check if it exists in the db
-	expect(await UserModel.exists({ email: "cake@fake.com" })).toBeTruthy();
 });
 
-it("POST LOGIN", async () => {
-	const agent = request.agent(app);
-	const res = await agent.post("/user/login").type("form").send({
-		email: "cake@fake.com",
-		password: "foo",
+describe("/user/login", () => {
+	it("POST should return the token on a successful login", async () => {
+		const agent = request.agent(app);
+
+		await agent.post("/user/signup").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+			passwordConfirm: "foo",
+		});
+
+		const res = await agent.post("/user/login").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+		});
+
+		expect(res.status).to.equal(200);
+
+		// Check if it exists in the db
+		expect(await UserModel.exists({ email: "cake@fake.com" })).to.not.be
+			.null;
+
+		// token is present
+		expect(res.body).toBeTypeOf("string");
+		expect(res.body).toBeTruthy();
 	});
 
-	expect(res.status).to.equal(200);
+	it("POST should return 400 on a failed login", async () => {
+		const agent = request.agent(app);
 
-	// Check if it exists in the db
-	expect(await UserModel.exists({ email: "cake@fake.com" })).to.not.be.null;
+		await agent.post("/user/signup").type("form").send({
+			email: "cake@fake.com",
+			password: "foo",
+			passwordConfirm: "foo",
+		});
+
+		const res = await agent.post("/user/login").type("form").send({
+			email: "cake@fake.com",
+			password: "fooo",
+		});
+
+		expect(res.status).to.equal(401);
+	});
 });
