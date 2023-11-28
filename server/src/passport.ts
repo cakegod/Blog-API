@@ -4,10 +4,6 @@ import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { UserModel } from "./api/user/user.model";
 
-interface PassportUser extends Express.User {
-	id?: string;
-}
-
 const passportConfig = () => {
 	passport.use(
 		"login",

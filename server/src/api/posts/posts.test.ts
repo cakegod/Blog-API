@@ -1,9 +1,11 @@
 import request from "supertest";
 import {
+	allPosts,
 	draftedPostSlug,
 	fakePostSlug,
-	posts,
+	publishedPosts,
 	publishedPostSlug,
+	withLimit,
 } from "./posts.fixture";
 import { PostModel } from "./posts.model";
 import { setupServer } from "../../tests.setup";
@@ -11,12 +13,12 @@ import { setupServer } from "../../tests.setup";
 const app = setupServer();
 
 describe("/posts", () => {
-	it("GET should return the published posts with the projected fields, sorted by date in descending order", async () => {
+	it("GET should return all posts, sorted by date in descending order", async () => {
 		const res = await request(app).get("/posts");
 
 		expect(res.status).to.equal(200);
-		expect(res.body.at(0).title).to.equal(posts.at(-1)!.title);
-		expect(res.body).to.have.length(posts.length);
+		expect(res.body.at(0).title).to.equal(allPosts.at(-1)!.title);
+		expect(res.body).toHaveLength(withLimit(allPosts.length));
 	});
 
 	it("POST should return 400 when inputs are invalid", async () => {
@@ -37,15 +39,42 @@ describe("/posts", () => {
 		// to check if the post exists in the db
 		expect(await PostModel.exists({ title: "foo" })).to.not.be.null;
 	});
+
+	it("GET should return all posts with the specified status query", async () => {
+		const res = await request(app).get(`/posts?status=publish`);
+		expect(res.body).toHaveLength(withLimit(publishedPosts.length));
+	});
+
+	it("GET should return the number of posts with the specified limit query", async () => {
+		// const res = await request(app).get(`/posts?limit=${1}`);
+		// expect(res.body).toHaveLength(withLimit(1));
+
+		for (let i = 1; i < 10; i++) {
+			const res = await request(app).get(`/posts?limit=${i}`);
+			expect(res.body).toHaveLength(
+				i > allPosts.length ? allPosts.length : i,
+			);
+		}
+	});
+
+	it("GET should ignore the limit query if limit query is 0", async () => {
+		const res = await request(app).get(`/posts?limit=0`);
+		expect(res.body).toHaveLength(allPosts.length);
+	});
+
+	it("GET should ignore the limit query if limit query is superior to 10", async () => {
+		const res = await request(app).get(`/posts?limit=11`);
+		expect(res.body).toHaveLength(allPosts.length);
+	});
 });
 
 describe("/posts/:slug", () => {
 	it("GET should return the post", async () => {
-		const res = await request(app).get(`/posts/${posts[1].slug}`);
+		const res = await request(app).get(`/posts/${allPosts[1].slug}`);
 
 		expect(res.status).to.equal(200);
 		expect(res.type).to.match(/json/);
-		expect(res.body.title).to.equal(posts[1].title);
+		expect(res.body.title).to.equal(allPosts[1].title);
 	});
 
 	it("GET should return 404 when the post does not exist", async () => {
@@ -56,7 +85,7 @@ describe("/posts/:slug", () => {
 
 	it("PUT should update the post", async () => {
 		const res = await request(app)
-			.put(`/posts/${posts[1].slug}`)
+			.put(`/posts/${allPosts[1].slug}`)
 			.type("form")
 			.send({
 				title: "bar",
@@ -77,7 +106,7 @@ describe("/posts/:slug", () => {
 			content: "bar",
 			description: "bar",
 		});
-		expect(updatedPost?.slug).to.equal(posts[1].slug);
+		expect(updatedPost?.slug).to.equal(allPosts[1].slug);
 	});
 
 	it("PUT should return 404 when the post does not exist", async () => {
@@ -91,10 +120,10 @@ describe("/posts/:slug", () => {
 	});
 
 	it("DELETE should delete the post", async () => {
-		const res = await request(app).delete(`/posts/${posts[1].slug}`);
+		const res = await request(app).delete(`/posts/${allPosts[1].slug}`);
 
 		expect(res.status).to.equal(204);
-		expect(await PostModel.exists({ slug: posts[1].slug })).to.be.null;
+		expect(await PostModel.exists({ slug: allPosts[1].slug })).to.be.null;
 	});
 
 	it("DELETE should return 404 when the post does not exist", async () => {

@@ -1,4 +1,5 @@
 import { Post, PostModel } from "./posts.model";
+import { LIMIT } from "./posts.constants";
 
 const data: Post[] = [
 	{
@@ -32,14 +33,29 @@ const data: Post[] = [
 	},
 ];
 
-const posts = data.map(post => new PostModel(post));
+const allPosts = data.map(post => new PostModel(post));
+const publishedPosts = allPosts.filter(post => post.status === "publish");
+const draftedPosts = allPosts.filter(post => post.status === "draft");
 
-const publishedPostSlug: Post["slug"] = posts.find(
+const publishedPostSlug: Post["slug"] = allPosts.find(
 	post => post.status === "publish",
 )!.slug;
-const draftedPostSlug: Post["slug"] = posts.find(
+const draftedPostSlug: Post["slug"] = allPosts.find(
 	post => post.status === "draft",
 )!.slug;
 const fakePostSlug = "foo";
 
-export { posts, publishedPostSlug, draftedPostSlug, fakePostSlug };
+// Limit the length to the current LIMIT
+function withLimit(length: number) {
+	return length > LIMIT ? LIMIT : length;
+}
+
+export {
+	allPosts,
+	publishedPosts,
+	draftedPosts,
+	publishedPostSlug,
+	draftedPostSlug,
+	fakePostSlug,
+	withLimit,
+};

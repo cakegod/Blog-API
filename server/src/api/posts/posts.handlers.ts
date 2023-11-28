@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import { PostModel } from "./posts.model";
-import { STATUS_STATES } from "./posts.constants";
+import { LIMIT, PAGE, STATUS_STATES } from "./posts.constants";
 
 const validatePost = [
 	check("title", "Title must not be empty").not().isEmpty().trim().escape(),
@@ -17,10 +17,31 @@ const validatePost = [
 		.escape(),
 ];
 
-const getPosts = async (_req: Request, res: Response) => {
-	const posts = await PostModel.find().sort({
-		date: -1,
-	});
+type Status = (typeof STATUS_STATES)[number];
+type ReqQuery = {
+	query: {
+		limit: number;
+		page: number;
+		status: Status;
+	};
+};
+type Query = {
+	status?: Status;
+};
+
+const getPosts = async (req: Request & ReqQuery, res: Response) => {
+	let { limit = LIMIT, page = PAGE, status } = req.query;
+
+	let query: Query = {};
+
+	if (STATUS_STATES.includes(status)) query.status = status;
+
+	const posts = await PostModel.find(query)
+		.sort({
+			date: -1,
+		})
+		.limit(limit)
+		.skip((page - 1) * limit);
 
 	res.json(posts);
 };
@@ -77,7 +98,7 @@ const putPost = [
 		}
 	},
 	...validatePost,
-	async (req: Request, res: Response, next: NextFunction) => {
+	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({

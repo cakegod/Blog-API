@@ -6,8 +6,6 @@ import dot from "dotenv";
 import cors from "cors";
 import blogRouter from "./api/posts/posts.routes";
 import userRouter from "./api/user/user.routes";
-import indexRouter from "./routes/index";
-import dashboardRouter from "./routes/dashboard";
 import CHttpException from "./types";
 import passportConfig from "./passport";
 import { setupDB } from "./database.setup";
@@ -42,10 +40,8 @@ if (app.get("env") === "production") {
 passportConfig();
 
 /* --- ROUTES --- */
-app.use("/", indexRouter);
 app.use("/posts", blogRouter);
 app.use("/user", userRouter);
-app.use("/dashboard", dashboardRouter);
 
 /* --- CATCH 404 --- */
 app.use((_req: Request, _res: Response, next: NextFunction) => {
