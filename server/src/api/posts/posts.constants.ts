@@ -1,1 +1,1 @@
-export const PROJECTION = ["title", "description", "date", "readTime", "slug"];
+export const STATUS_STATES = ["publish", "draft"];

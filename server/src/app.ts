@@ -4,8 +4,6 @@ import logger from "morgan";
 import helmet from "helmet";
 import dot from "dotenv";
 import cors from "cors";
-import session from "express-session";
-import passport from "passport";
 import blogRouter from "./api/posts/posts.routes";
 import userRouter from "./api/user/user.routes";
 import indexRouter from "./routes/index";
@@ -30,8 +28,6 @@ app.use(express.urlencoded({ extended: true }));
 /* --- CORS --- */
 app.use(cors());
 
-app.use(session({ secret: "cake", resave: false, saveUninitialized: false }));
-
 /* --- LOGGER --- */
 if (app.get("env") === "development") {
 	app.use(logger("dev"));
@@ -42,15 +38,8 @@ if (app.get("env") === "production") {
 	app.use(helmet());
 }
 
-/* --- SAVE CURRENT USER IN LOCAL --- */
-app.use((req, res, next) => {
-	res.locals.currentUser = req.user;
-	next();
-});
-
 /* --- INIT PASSPORT --- */
 passportConfig();
-app.use(passport.session());
 
 /* --- ROUTES --- */
 app.use("/", indexRouter);

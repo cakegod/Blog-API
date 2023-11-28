@@ -5,7 +5,7 @@ import {
 	getPosts,
 	postPost,
 	putPost,
-	togglePost,
+	changePostStatus,
 } from "./posts.handlers";
 import passport from "passport";
 
@@ -18,9 +18,9 @@ router.get("/:slug", getPost);
 router.put("/:slug", putPost);
 router.delete("/:slug", deletePost);
 router.put(
-	"/:slug/publish-action",
+	"/:slug",
 	passport.authenticate("jwt", { session: false }),
-	togglePost,
+	changePostStatus,
 );
 
 export default router;

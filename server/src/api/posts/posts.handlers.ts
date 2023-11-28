@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import { PostModel } from "./posts.model";
-import { PROJECTION } from "./posts.constants";
+import { STATUS_STATES } from "./posts.constants";
 
 const validatePost = [
 	check("title", "Title must not be empty").not().isEmpty().trim().escape(),
@@ -18,7 +18,7 @@ const validatePost = [
 ];
 
 const getPosts = async (_req: Request, res: Response) => {
-	const posts = await PostModel.find({ published: true }, PROJECTION).sort({
+	const posts = await PostModel.find().sort({
 		date: -1,
 	});
 
@@ -68,8 +68,16 @@ const getPost = async (req: Request, res: Response) => {
 };
 
 const putPost = [
+	// check if action is present
+	(req: Request, _res: Response, next: NextFunction) => {
+		if (req.body?.status) {
+			next("route");
+		} else {
+			next();
+		}
+	},
 	...validatePost,
-	async (req: Request, res: Response) => {
+	async (req: Request, res: Response, next: NextFunction) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({
@@ -106,25 +114,14 @@ const deletePost = async (req: Request, res: Response) => {
 	res.status(204).end();
 };
 
-const togglePost = async (req: Request, res: Response) => {
-	function actionResult(action: "publish" | "unpublish") {
-		switch (action) {
-			case "publish":
-				return true;
-			case "unpublish":
-				return false;
-		}
-	}
-
-	const isPublished = actionResult(req.body?.action);
-
-	if (isPublished === undefined) {
-		return res.status(404).end();
+const changePostStatus = async (req: Request, res: Response) => {
+	if (!STATUS_STATES.includes(req.body.status)) {
+		return res.status(400).end();
 	}
 
 	const updatedPost = await PostModel.findOneAndUpdate(
 		{ slug: req.params.slug },
-		{ published: isPublished },
+		{ status: req.body.status },
 		{ new: true },
 	);
 
@@ -135,4 +132,4 @@ const togglePost = async (req: Request, res: Response) => {
 	res.status(200).json(updatedPost).end();
 };
 
-export { getPosts, postPost, getPost, putPost, deletePost, togglePost };
+export { getPosts, postPost, getPost, putPost, deletePost, changePostStatus };

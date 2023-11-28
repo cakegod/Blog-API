@@ -1,13 +1,12 @@
 import request from "supertest";
-import { PROJECTION } from "./posts.constants";
 import {
+	draftedPostSlug,
 	fakePostSlug,
 	posts,
 	publishedPostSlug,
-	unpublishedPostSlug,
 } from "./posts.fixture";
 import { PostModel } from "./posts.model";
-import { cleanUp, setupServer } from "../../tests.setup";
+import { setupServer } from "../../tests.setup";
 
 const app = setupServer();
 
@@ -16,11 +15,8 @@ describe("/posts", () => {
 		const res = await request(app).get("/posts");
 
 		expect(res.status).to.equal(200);
-		expect(Object.keys(res.body[0])).to.include.members(PROJECTION);
-		expect(res.body[0].title).to.equal(posts[2].title);
-		expect(res.body).to.have.length(
-			posts.filter(post => post.published).length,
-		);
+		expect(res.body.at(0).title).to.equal(posts.at(-1)!.title);
+		expect(res.body).to.have.length(posts.length);
 	});
 
 	it("POST should return 400 when inputs are invalid", async () => {
@@ -108,7 +104,7 @@ describe("/posts/:slug", () => {
 	});
 });
 
-describe("/:slug/publish-action", () => {
+describe("/posts/:slug status change", () => {
 	// TODO: Improve this. I don't like this weird setup token variable usage on all tests.
 	let token: string;
 
@@ -130,56 +126,56 @@ describe("/:slug/publish-action", () => {
 
 	//
 
-	it("POST should publish the post when the action's value is 'publish'", async () => {
+	it("PUT should change the post status to 'publish'", async () => {
 		const res = await request(app)
-			.put(`/posts/${unpublishedPostSlug}/publish-action`)
+			.put(`/posts/${draftedPostSlug}`)
 			.auth(token, { type: "bearer" })
-			.send({ action: "publish" });
+			.send({ status: "publish" });
 
 		expect(res.status).to.equal(200);
-		expect(res.body.published).to.true;
+		expect(res.body.status).to.equal("publish");
 	});
 
-	it("POST should unpublish the post when the action's value is 'unpublish'", async () => {
+	it("PUT should change the post status to 'draft'", async () => {
 		const res = await request(app)
-			.put(`/posts/${publishedPostSlug}/publish-action`)
+			.put(`/posts/${publishedPostSlug}`)
 			.auth(token, { type: "bearer" })
-			.send({ action: "unpublish" });
+			.send({ status: "draft" });
 
 		expect(res.status).to.equal(200);
-		expect(res.body.published).to.false;
+		expect(res.body.status).to.equal("draft");
 	});
 
-	it("POST should return 404 when the post does not exist", async () => {
+	it("PUT should return 404 when the post does not exist", async () => {
 		const res = await request(app)
-			.put(`/posts/${fakePostSlug}/publish-action`)
+			.put(`/posts/${fakePostSlug}`)
 			.auth(token, { type: "bearer" })
-			.send({ action: "unpublish" });
+			.send({ status: "publish" });
 
 		expect(res.status).to.equal(404);
 	});
 
-	it("POST should return 404 when the action's value is invalid", async () => {
+	it("PUT should return 400 when the status's value is invalid", async () => {
 		const res = await request(app)
-			.put(`/posts/${publishedPostSlug}/publish-action`)
+			.put(`/posts/${publishedPostSlug}`)
 			.auth(token, { type: "bearer" })
-			.send({ action: "invalid" });
+			.send({ status: "invalid" });
 
-		expect(res.status).to.equal(404);
+		expect(res.status).to.equal(400);
 	});
 
-	it("POST should return 404 when the action is not sent", async () => {
+	it("PUT should return 404 when the status is not sent", async () => {
 		const res = await request(app)
-			.put(`/posts/${publishedPostSlug}/publish-action`)
+			.put(`/posts/${publishedPostSlug}`)
 			.auth(token, { type: "bearer" });
 
-		expect(res.status).to.equal(404);
+		expect(res.status).to.equal(400);
 	});
 
-	it("POST should return 401 when jwt token not sent", async () => {
+	it("PUT should return 401 when jwt token not sent", async () => {
 		const res = await request(app)
-			.put(`/posts/${publishedPostSlug}/publish-action`)
-			.send({ action: "publish" });
+			.put(`/posts/${publishedPostSlug}`)
+			.send({ status: "publish" });
 
 		expect(res.status).to.equal(401);
 	});

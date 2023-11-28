@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { setupDB } from "./database.setup";
-import express, { Express } from "express";
 import passportConfig from "./passport";
 import blogRouter from "./api/posts/posts.routes";
 import userRouter from "./api/user/user.routes";
 import { PostModel } from "./api/posts/posts.model";
 import { UserModel } from "./api/user/user.model";
 import { posts } from "./api/posts/posts.fixture";
+import express from "express";
 
 beforeAll(async () => {
 	const mongoServer = await MongoMemoryServer.create();
