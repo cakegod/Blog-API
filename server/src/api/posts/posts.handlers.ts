@@ -18,11 +18,14 @@ const validatePost = [
 ];
 
 type Status = (typeof STATUS_STATES)[number];
+type Sorting = "newest" | "oldest";
 type ReqQuery = {
 	query: {
-		limit: number;
-		page: number;
+		limit: string;
+		page: string;
 		status: Status;
+		offset: string;
+		sort: Sorting;
 	};
 };
 type Query = {
@@ -30,20 +33,30 @@ type Query = {
 };
 
 const getPosts = async (req: Request & ReqQuery, res: Response) => {
-	let { limit = LIMIT, page = PAGE, status } = req.query;
+	let {
+		limit = LIMIT,
+		page = PAGE,
+		status,
+		offset = 0,
+		sort = "newest",
+	} = req.query;
 
 	let query: Query = {};
-
 	if (STATUS_STATES.includes(status)) query.status = status;
+
+	const sorting = {
+		newest: -1,
+		oldest: 1,
+	} as const;
 
 	const posts = await PostModel.find(query)
 		.sort({
-			date: -1,
+			date: sorting[sort] ?? sorting.newest,
 		})
-		.limit(limit)
-		.skip((page - 1) * limit);
+		.limit(Number(limit))
+		.skip((Number(page) - 1) * Number(limit) + Number(offset));
 
-	res.json(posts);
+	res.json(posts).end();
 };
 
 const postPost = [

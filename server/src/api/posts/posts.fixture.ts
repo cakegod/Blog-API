@@ -1,7 +1,7 @@
 import { Post, PostModel } from "./posts.model";
 import { LIMIT } from "./posts.constants";
 
-const data: Post[] = [
+const data: readonly Post[] = Object.freeze([
 	{
 		title: "Introduction to JavaScript",
 		description: "A brief overview of JavaScript programming language",
@@ -31,7 +31,7 @@ const data: Post[] = [
 		date: new Date("2024-01-01"),
 		status: "draft",
 	},
-];
+]);
 
 const allPosts = data.map(post => new PostModel(post));
 const publishedPosts = allPosts.filter(post => post.status === "publish");

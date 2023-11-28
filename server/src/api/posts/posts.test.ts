@@ -9,11 +9,12 @@ import {
 } from "./posts.fixture";
 import { PostModel } from "./posts.model";
 import { setupServer } from "../../tests.setup";
+import { LIMIT } from "./posts.constants";
 
 const app = setupServer();
 
 describe("/posts", () => {
-	it("GET should return all posts, sorted by date in descending order", async () => {
+	it("GET should return all posts, sorted by newest date", async () => {
 		const res = await request(app).get("/posts");
 
 		expect(res.status).to.equal(200);
@@ -21,9 +22,16 @@ describe("/posts", () => {
 		expect(res.body).toHaveLength(withLimit(allPosts.length));
 	});
 
+	it("GET should return posts, sorted by newest", async () => {
+		const res = await request(app).get("/posts?sort=oldest");
+		expect(res.status).to.equal(200);
+		expect(res.body[0].title).to.equal(allPosts[0].title);
+		expect(res.body[1].title).to.equal(allPosts[1].title);
+		expect(res.body).toHaveLength(withLimit(allPosts.length));
+	});
+
 	it("POST should return 400 when inputs are invalid", async () => {
 		const res = await request(app).post("/posts");
-
 		expect(res.status).to.equal(400);
 	});
 
@@ -42,28 +50,41 @@ describe("/posts", () => {
 
 	it("GET should return all posts with the specified status query", async () => {
 		const res = await request(app).get(`/posts?status=publish`);
+		expect(res.status).to.equal(200);
 		expect(res.body).toHaveLength(withLimit(publishedPosts.length));
 	});
 
 	it("GET should return the number of posts with the specified limit query", async () => {
-		// const res = await request(app).get(`/posts?limit=${1}`);
-		// expect(res.body).toHaveLength(withLimit(1));
-
-		for (let i = 1; i < 10; i++) {
+		for (let i = 1; i < LIMIT; i++) {
 			const res = await request(app).get(`/posts?limit=${i}`);
+			expect(res.status).to.equal(200);
 			expect(res.body).toHaveLength(
 				i > allPosts.length ? allPosts.length : i,
 			);
 		}
 	});
 
+	it("GET should return the number of posts with the specified status and limit queries", async () => {
+		const res = await request(app).get(`/posts?limit=2&status=publish`);
+		expect(res.status).to.equal(200);
+		expect(res.body).toHaveLength(withLimit(2));
+	});
+
+	it("GET should return the number of posts with the specified offset", async () => {
+		const res = await request(app).get(`/posts?offset=1&sort=oldest`);
+		expect(res.status).to.equal(200);
+		expect(res.body[0].title).toEqual(allPosts[1].title);
+	});
+
 	it("GET should ignore the limit query if limit query is 0", async () => {
 		const res = await request(app).get(`/posts?limit=0`);
+		expect(res.status).to.equal(200);
 		expect(res.body).toHaveLength(allPosts.length);
 	});
 
 	it("GET should ignore the limit query if limit query is superior to 10", async () => {
 		const res = await request(app).get(`/posts?limit=11`);
+		expect(res.status).to.equal(200);
 		expect(res.body).toHaveLength(allPosts.length);
 	});
 });
