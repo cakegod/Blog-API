@@ -1,7 +1,7 @@
 import request from "supertest";
 import { UserModel } from "./user.model";
-import { setupServer } from "../../tests.setup";
 import { describe } from "vitest";
+import { setupServer } from "../_shared/tests.util";
 
 const app = setupServer();
 
@@ -78,13 +78,13 @@ describe("/user/login", () => {
 		});
 
 		expect(res.status).to.equal(200);
+		expect(res.header).toContain;
 
 		// Check if it exists in the db
 		expect(await UserModel.exists({ email: "cake@fake.com" })).toBeTruthy();
 
 		// token is present
-		expect(res.body).toBeTypeOf("string");
-		expect(res.body).toBeTruthy();
+		expect(res.body.token).toBeTypeOf("string");
 	});
 
 	describe("POST should return 401 on a failed login", () => {

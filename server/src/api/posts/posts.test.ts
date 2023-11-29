@@ -8,8 +8,8 @@ import {
 	withLimit,
 } from "./posts.fixture";
 import { PostModel } from "./posts.model";
-import { setupServer } from "../../tests.setup";
 import { LIMIT } from "./posts.constants";
+import { setupServer } from "../_shared/tests.util";
 
 const app = setupServer();
 
@@ -23,7 +23,7 @@ describe("/posts", () => {
 	});
 
 	it("GET should return posts, sorted by newest", async () => {
-		const res = await request(app).get("/posts?sort=oldest");
+		const res = await request(app).get("/posts?sort=oldest").expect(200);
 		expect(res.status).to.equal(200);
 		expect(res.body[0].title).to.equal(allPosts[0].title);
 		expect(res.body[1].title).to.equal(allPosts[1].title);
@@ -45,7 +45,7 @@ describe("/posts", () => {
 		expect(res.status).to.equal(204);
 
 		// to check if the post exists in the db
-		expect(await PostModel.exists({ title: "foo" })).to.not.be.null;
+		expect(await PostModel.exists({ title: "foo" })).toBeTruthy();
 	});
 
 	it("GET should return all posts with the specified status query", async () => {
@@ -171,7 +171,7 @@ describe("/posts/:slug status change", () => {
 			password: "foo",
 		});
 
-		token = res.body;
+		token = res.body.token;
 	});
 
 	//

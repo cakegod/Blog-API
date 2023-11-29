@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import passport from "passport";
 import jwt from "jsonwebtoken";
@@ -21,16 +21,16 @@ const validateUser = [
 const postLogin = [
 	passport.authenticate("login", { session: false }),
 	(req: Request & { user: User & Document }, res: Response) => {
-		res.json(
-			jwt.sign(
+		res.json({
+			token: jwt.sign(
 				{
 					email: req.user.email,
 					admin: req.user.admin,
 					id: req.user.id,
 				},
-				"SECRET!",
+				process.env.JWT_SECRET!,
 			),
-		);
+		});
 	},
 ];
 
