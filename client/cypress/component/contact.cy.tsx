@@ -1,6 +1,5 @@
 import Contact from '@/app/contact/page';
 
-
 const form = [
   {
     name: 'email',
@@ -58,7 +57,7 @@ describe('contact page', () => {
       .next()
       .should('be.visible')
       .contains(
-        /Want to hire me\? Got feedback or potential features for this blog\?/i
+        /Want to hire me\? Got feedback or potential features for this blog\?/i,
       );
   });
 });

@@ -28,7 +28,7 @@ function Form() {
   ]);
 
   const handleInput = (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData(
       formData.map((input) => {
@@ -36,7 +36,7 @@ function Form() {
           return { ...input, value: e.currentTarget.value };
         }
         return input;
-      })
+      }),
     );
   };
   return (

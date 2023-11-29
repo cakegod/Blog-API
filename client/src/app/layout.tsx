@@ -1,8 +1,5 @@
-import Header from '@blog/Header';
-import Footer from '@blog/Footer';
 import '@/styles/global.css';
-import { Poppins } from '@next/font/google';
-import { ThemeProvider } from 'next-themes';
+import { Poppins } from 'next/font/google';
 import ContextWrapper from '@/components/ContextWrapper';
 
 const poppins = Poppins({

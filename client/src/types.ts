@@ -9,7 +9,7 @@ interface PostProps {
   readTime: string;
   content: string;
   slug: string;
-  published: boolean;
+  status: 'publish' | 'draft';
 }
 
 interface ProjectProps {

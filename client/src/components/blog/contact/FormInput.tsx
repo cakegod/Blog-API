@@ -9,7 +9,7 @@ interface Props {
     textarea: boolean;
   };
   handleInput: (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 }
 

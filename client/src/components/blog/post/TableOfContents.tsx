@@ -8,11 +8,11 @@ function TableOfContents() {
     const query = document.querySelectorAll('h3');
     if (query.length) {
       query.forEach((heading) =>
-        heading.setAttribute('id', `${heading.textContent}`)
+        heading.setAttribute('id', `${heading.textContent}`),
       );
       const createArray = Array.from(query);
       const getHeadings = createArray.map(
-        (heading) => heading.textContent
+        (heading) => heading.textContent,
       ) as string[];
       setHeadings(getHeadings);
     }

@@ -120,8 +120,6 @@
 		"types": ["vitest/globals"]
 	},
 
-	"include": ["./src/**/*.ts",
-      "vitest.config.mts"
-    ],
+	"include": ["./src/**/*.ts", "vitest.config.mts"],
 	"exclude": ["./node_modules/"]
 }

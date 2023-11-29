@@ -3,19 +3,11 @@ import { PostProps } from '@/types';
 import { composeDate } from '@/util/composeDate';
 
 async function fetchPosts(): Promise<PostProps[]> {
-  const url = `${process.env.URL}/blog/`;
-  const res = await fetch(url);
-  const data = await res.json();
-
-  return data;
+  const res = await fetch(`${process.env.URL}/posts`);
+  return await res.json();
 }
 
-// Hacky fix for server components
-function asyncComponent<T, R>(fn: (arg: T) => Promise<R>): (arg: T) => R {
-  return fn as (arg: T) => R;
-}
-
-const Posts = asyncComponent(async () => {
+const Posts = async () => {
   const posts = await fetchPosts();
   return posts ? (
     <>
@@ -40,6 +32,6 @@ const Posts = asyncComponent(async () => {
       There are currently no posts available
     </h3>
   );
-});
+};
 
 export default Posts;

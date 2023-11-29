@@ -11,7 +11,7 @@ describe('header.cy.ts', () => {
     cy.get('p')
       .last()
       .contains(
-        /i'm an aspiring web developer with a passion for react\. welcome to my personal blog 📚, where i write about all things react, javascript and typescript\./i
+        /i'm an aspiring web developer with a passion for react\. welcome to my personal blog 📚, where i write about all things react, javascript and typescript\./i,
       );
   });
 });

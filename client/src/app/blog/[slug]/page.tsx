@@ -4,24 +4,22 @@ import ArticleContent from '@blog/post/ArticleContent';
 import CommentSystem from '@blog/post/CommentSystem';
 import ArticleHeader from '@blog/post/ArticleHeader';
 
-type Params = { params: { postid: string } };
+type Params = { params: { slug: string } };
 
 export async function generateStaticParams() {
-  const url = `${process.env.URL}/blog`;
-  const res = await fetch(url);
+  const res = await fetch(`${process.env.URL}/posts`);
   const posts: PostProps[] = await res.json();
-  return posts.map((post) => ({ postid: post.slug }));
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
-async function fetchPost(postid: string): Promise<PostProps> {
-  const url = `${process.env.URL}/blog/${postid}`;
+async function fetchPost(slug: string): Promise<PostProps> {
+  const url = `${process.env.URL}/posts/${slug}`;
   const res = await fetch(url);
-  const data = await res.json();
-  return data;
+  return await res.json();
 }
 
 async function Post({ params }: Params) {
-  const post = await fetchPost(params.postid);
+  const post = await fetchPost(params.slug);
 
   return (
     <>

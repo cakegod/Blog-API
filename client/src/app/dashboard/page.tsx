@@ -3,10 +3,9 @@ import { PostProps } from '@/types';
 import React from 'react';
 
 async function fetchPosts(): Promise<PostProps[]> {
-  const url = `${process.env.URL}/dashboard/`;
+  const url = `${process.env.URL}/posts`;
   const res = await fetch(url);
-  const data = await res.json();
-  return data;
+  return await res.json();
 }
 
 async function Dashboard() {

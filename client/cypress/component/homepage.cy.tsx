@@ -1,6 +1,5 @@
 import RootLayout from '../../src/app/layout';
 
-
 describe('homepage', () => {
   beforeEach(() => cy.mount(<RootLayout />));
 
