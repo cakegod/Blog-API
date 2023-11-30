@@ -7,7 +7,7 @@ import { PostModel } from "../posts/posts.model";
 import { UserModel } from "../user/user.model";
 import { allPosts } from "../posts/posts.fixture";
 
-export function setupServer() {
+function setupServer() {
 	dot.config();
 	const app = express();
 	passportConfig();
@@ -19,12 +19,10 @@ export function setupServer() {
 	return app;
 }
 
-export async function cleanUp() {
+async function cleanUp() {
 	await PostModel.deleteMany();
 	await UserModel.deleteMany();
 	await Promise.all(allPosts.map(post => new PostModel(post).save()));
 }
 
-beforeEach(async () => {
-	await cleanUp();
-});
+export { setupServer, cleanUp };
