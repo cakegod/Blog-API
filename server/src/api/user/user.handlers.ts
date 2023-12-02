@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { User, UserModel } from "./user.model";
 import { Document } from "mongoose";
 
-const validateUser = [
+const validateUser = () => [
 	check("email", "email must not be empty")
 		.not()
 		.isEmpty()
@@ -35,7 +35,7 @@ const postLogin = [
 ];
 
 const postSignup = [
-	...validateUser,
+	...validateUser(),
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 

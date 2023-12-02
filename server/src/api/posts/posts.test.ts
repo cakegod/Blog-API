@@ -28,10 +28,16 @@ describe("/posts", () => {
 		});
 
 		it("should return all posts sorted by oldest when sort query is 'oldest'", async () => {
-			const res = await request(app).get("/posts");
+			const res = await request(app).get("/posts?sort=oldest");
 			expect(res.status).to.equal(200);
-			expect(res.body.at(0).title).to.equal(allPosts.at(-1)!.title);
+			expect(res.body.at(0).title).to.equal(allPosts.at(0)!.title);
 			expect(res.body).toHaveLength(withLimit(allPosts.length));
+		});
+
+		it("should send BAD REQUEST the status query is invalid", async () => {
+			const res = await request(app).get(`/posts?sort=fooo`);
+			expect(res.status).to.equal(400);
+			expect(res.body).toHaveLength(1);
 		});
 
 		it("should return all posts with the specified status query when the status query is 'publish'", async () => {
@@ -56,21 +62,21 @@ describe("/posts", () => {
 			expect(res.body).toHaveLength(withLimit(2));
 		});
 
-		it("should ignore the limit query when the value is 0", async () => {
-			const res = await request(app).get(`/posts?limit=2&status=publish`);
-			expect(res.status).to.equal(200);
-			expect(res.body).toHaveLength(withLimit(2));
+		it("should send BAD REQUEST the limit query when the value is 0", async () => {
+			const res = await request(app).get(`/posts?limit=0`);
+			expect(res.status).to.equal(400);
+			expect(res.body).toHaveLength(1);
 		});
 
-		it("should ignore the limit query when limit query is superior to 10", async () => {
+		it("should send BAD REQUEST the limit query when limit query is superior to 10", async () => {
 			const res = await request(app).get(`/posts?limit=11`);
-			expect(res.status).to.equal(200);
-			expect(res.body).toHaveLength(allPosts.length);
+			expect(res.status).to.equal(400);
+			expect(res.body).toHaveLength(1);
 		});
 	});
 
 	describe("POST", () => {
-		it("should send Bad Request when inputs are invalid", async () => {
+		it("should send BAD REQUEST when inputs are invalid", async () => {
 			const res = await request(app).post("/posts");
 			expect(res.status).to.equal(400);
 		});
@@ -100,7 +106,7 @@ describe("/posts/:slug", () => {
 			expect(res.body.title).to.equal(allPosts[1].title);
 		});
 
-		it("should send Not Found when the post does not exist", async () => {
+		it("should send NOT FOUND when the post does not exist", async () => {
 			const res = await request(app).get(`/posts/foo`);
 
 			expect(res.status).to.equal(404);
@@ -134,7 +140,7 @@ describe("/posts/:slug", () => {
 			expect(updatedPost?.slug).to.equal(allPosts[1].slug);
 		});
 
-		it("should send Not Found when the post does not exist", async () => {
+		it("should send NOT FOUND when the post does not exist", async () => {
 			const res = await request(app).put("/posts/foo").type("form").send({
 				title: "bar",
 				content: "bar",
@@ -186,7 +192,7 @@ describe("/posts/:slug", () => {
 				expect(res.body.status).to.equal("draft");
 			});
 
-			it("should send Not Found when the post does not exist", async () => {
+			it("should send NOT FOUND when the post does not exist", async () => {
 				const res = await request(app)
 					.put(`/posts/${fakePostSlug}`)
 					.auth(token, { type: "bearer" })
@@ -195,7 +201,7 @@ describe("/posts/:slug", () => {
 				expect(res.status).to.equal(404);
 			});
 
-			it("should send Not Found when the status's value is invalid", async () => {
+			it("should send NOT FOUND when the status's value is invalid", async () => {
 				const res = await request(app)
 					.put(`/posts/${publishedPostSlug}`)
 					.auth(token, { type: "bearer" })
@@ -204,7 +210,7 @@ describe("/posts/:slug", () => {
 				expect(res.status).to.equal(400);
 			});
 
-			it("should send Bad Request when the status is not sent", async () => {
+			it("should send BAD REQUEST when the status is not sent", async () => {
 				const res = await request(app)
 					.put(`/posts/${publishedPostSlug}`)
 					.auth(token, { type: "bearer" });
@@ -212,7 +218,7 @@ describe("/posts/:slug", () => {
 				expect(res.status).to.equal(400);
 			});
 
-			it("should send Unauthorized when jwt token not sent", async () => {
+			it("should send UNAUTHORIZED when jwt token not sent", async () => {
 				const res = await request(app)
 					.put(`/posts/${publishedPostSlug}`)
 					.send({ status: "publish" });
@@ -230,7 +236,7 @@ describe("/posts/:slug", () => {
 				.null;
 		});
 
-		it("should send not found when the post does not exist", async () => {
+		it("should send NOT FOUND when the post does not exist", async () => {
 			const res = await request(app).delete(`/posts/foo`);
 
 			expect(res.status).to.equal(404);

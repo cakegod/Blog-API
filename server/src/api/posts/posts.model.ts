@@ -1,14 +1,17 @@
 import { InferSchemaType, model, Schema } from "mongoose";
 import { STATUS_STATES } from "./posts.constants";
 
-// Need to set fields as required: false so they're inferred as optional. They'll automatically be created using required fields
-// E.g. readTime is computed using the content field, which is a required field
+/*
+Some fields are "required: false" so they're inferred as optional. They'll be created automatically using the existing required fields.
+E.g., readTime is computed using the content field, which is a required field.
+This allows us to create fixtures without fields that are naturally computed.
+*/
 const PostSchema = new Schema(
 	{
 		title: {
 			type: String,
-			unique: true,
 			required: true,
+			unique: true,
 		},
 		description: { type: String, required: true },
 		content: { type: String, required: true },
@@ -21,12 +24,12 @@ const PostSchema = new Schema(
 		},
 		readTime: {
 			type: String,
+			required: false,
 			default: function () {
 				return `${Math.ceil(
 					(this as Post).content.trim().split(/\s+/).length / 250,
 				)} min read`;
 			},
-			required: false,
 		},
 		slug: {
 			type: String,

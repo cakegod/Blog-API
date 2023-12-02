@@ -7,8 +7,8 @@ import cors from "cors";
 import blogRouter from "./api/posts/posts.routes";
 import userRouter from "./api/user/user.routes";
 import CHttpException from "./types";
-import passportConfig from "./passport";
-import { setupDB } from "./database.setup";
+import passportConfig from "./setup/passport.setup";
+import { setupDB } from "./setup/database.setup";
 
 /* --- INIT DOTENV --- */
 dot.config();

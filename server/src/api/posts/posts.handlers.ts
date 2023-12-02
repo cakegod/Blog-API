@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { check, validationResult } from "express-validator";
+import { check, query, validationResult } from "express-validator";
 import { PostModel } from "./posts.model";
-import { LIMIT, PAGE, STATUS_STATES } from "./posts.constants";
+import { LIMIT, PAGE, SORT_VALUES, STATUS_STATES } from "./posts.constants";
 
-const validatePost = [
+const validatePost = () => [
 	check("title", "Title must not be empty").not().isEmpty().trim().escape(),
 	check("description", "Description must not be empty")
 		.not()
@@ -18,49 +18,75 @@ const validatePost = [
 ];
 
 type Status = (typeof STATUS_STATES)[number];
-type Sorting = "newest" | "oldest";
-type ReqQuery = {
+type Sort = (typeof SORT_VALUES)[number];
+
+interface CustomPostsRequest extends Request {
 	query: {
 		limit: string;
 		page: string;
 		status: Status;
 		offset: string;
-		sort: Sorting;
+		sort: Sort;
 	};
-};
+}
+
 type Query = {
 	status?: Status;
 };
 
-const getPosts = async (req: Request & ReqQuery, res: Response) => {
-	let {
-		limit = LIMIT,
-		page = PAGE,
-		status,
-		offset = 0,
-		sort = "newest",
-	} = req.query;
+const validateQueries = () => [
+	query(
+		"status",
+		`Invalid status value. Valid values: ${STATUS_STATES.join(", ")}`,
+	)
+		.isIn(STATUS_STATES)
+		.optional(),
+	query("sort", `Invalid sort value. Valid values: ${SORT_VALUES.join(", ")}`)
+		.isIn(SORT_VALUES)
+		.optional(),
+	query("limit", `Invalid limit value. Min value: 1, Max value: ${LIMIT}.`)
+		.isInt({ min: 1, max: 10 })
+		.optional(),
+];
 
-	let query: Query = {};
-	if (STATUS_STATES.includes(status)) query.status = status;
+const getPosts = [
+	validateQueries(),
+	async (req: CustomPostsRequest, res: Response) => {
+		const errors = validationResult(req);
 
-	const sorting = {
-		newest: -1,
-		oldest: 1,
-	} as const;
+		if (!errors.isEmpty()) {
+			return res.status(400).json(errors.array()).end();
+		}
 
-	const posts = await PostModel.find(query)
-		.sort({
-			date: sorting[sort] ?? sorting.newest,
-		})
-		.limit(Number(limit))
-		.skip((Number(page) - 1) * Number(limit) + Number(offset));
+		let {
+			limit = LIMIT,
+			page = PAGE,
+			status,
+			offset = 0,
+			sort = "newest",
+		} = req.query;
 
-	res.json(posts).end();
-};
+		let query: Query = {};
+		if (status) query.status = status;
+
+		const sorting = {
+			newest: -1,
+			oldest: 1,
+		} as const;
+
+		const posts = await PostModel.find(query)
+			.sort({
+				date: sorting[sort] ?? sorting.newest,
+			})
+			.limit(Number(limit))
+			.skip((Number(page) - 1) * Number(limit) + Number(offset));
+
+		res.json(posts);
+	},
+];
 
 const postPost = [
-	...validatePost,
+	...validatePost(),
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 
@@ -110,7 +136,7 @@ const putPost = [
 			next();
 		}
 	},
-	...validatePost,
+	...validatePost(),
 	async (req: Request, res: Response) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
