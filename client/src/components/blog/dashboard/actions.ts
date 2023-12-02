@@ -1,17 +1,22 @@
 'use server';
 
-export async function handlePublishToggle(formData: FormData, hey) {
-  console.log(Object.fromEntries(formData));
-  console.log(hey);
-  // e.preventDefault();
-  // await fetch(`http://localhost:3000/posts/${slug}`, {
-  //   method: 'PUT',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZha2VAZmFrZS5jb20iLCJhZG1pbiI6ZmFsc2UsImlkIjoiNjU2M2M0NTEwYmE4MzU3Mzk5ZDYwY2RmIiwiaWF0IjoxNzAxMTI2MzM2fQ.LvNCDjsKPpTk3jNLAPjUvtBnCB-F0jksL-uHz9-otzw`,
-  //   },
-  //   body: JSON.stringify({
-  //     status,
-  //   }),
-  // });
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+
+export async function statusAction(formData: FormData) {
+  const cookieToken = cookies().get('token')?.value;
+  const { token } = cookieToken && JSON.parse(cookieToken);
+
+  const form = Object.fromEntries(formData);
+  await fetch(`${process.env.URL}/posts/${form.slug}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      status: form.status,
+    }),
+  });
+  revalidatePath('/dashboard');
 }

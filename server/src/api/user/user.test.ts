@@ -28,7 +28,7 @@ describe("/user/signup", () => {
 				.null;
 		});
 
-		describe("should send Bad Request when inputs are invalid", () => {
+		describe("should send BAD REQUEST when inputs are invalid", () => {
 			it("missing confirm password", async () => {
 				const res = await request(app)
 					.post("/user/signup")
@@ -98,7 +98,7 @@ describe("/user/login", () => {
 			expect(res.body.token).toBeTypeOf("string");
 		});
 
-		describe("should send Unauthorized on a failed login", () => {
+		describe("should send UNAUTHORIZED on a failed login", () => {
 			it("wrong password", async () => {
 				const agent = request.agent(app);
 

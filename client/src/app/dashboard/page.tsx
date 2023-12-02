@@ -3,8 +3,7 @@ import { PostProps } from '@/types';
 import React from 'react';
 
 async function fetchPosts(): Promise<PostProps[]> {
-  const url = `${process.env.URL}/posts`;
-  const res = await fetch(url);
+  const res = await fetch(`${process.env.URL}/posts`);
   return await res.json();
 }
 

@@ -130,6 +130,7 @@ const getPost = async (req: Request, res: Response) => {
 const putPost = [
 	// check if action is present
 	(req: Request, _res: Response, next: NextFunction) => {
+		console.log(req.body);
 		if (req.body?.status) {
 			next("route");
 		} else {
