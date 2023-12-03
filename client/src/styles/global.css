@@ -3,5 +3,9 @@
 @tailwind utilities;
 
 * {
-  font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+pre > div {
+    background: none !important;
 }
