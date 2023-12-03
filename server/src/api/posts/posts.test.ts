@@ -79,6 +79,10 @@ describe("/posts", () => {
 		it("should send BAD REQUEST when inputs are invalid", async () => {
 			const res = await request(app).post("/posts");
 			expect(res.status).to.equal(400);
+			expect(res.header["content-type"]).toMatch(/json/);
+			expect(res.body).toMatchObject({
+				errors: {},
+			});
 		});
 
 		it("should create a post when inputs are valid", async () => {

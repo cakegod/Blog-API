@@ -28,6 +28,27 @@ describe("/user/signup", () => {
 				.null;
 		});
 
+		it("should send BAD REQUEST when the email already exists", async () => {
+			await request(app).post("/user/signup").type("form").send({
+				email: "cake@fake.com",
+				password: "foo",
+				passwordConfirm: "foo",
+			});
+
+			const res = await request(app)
+				.post("/user/signup")
+				.type("form")
+				.send({
+					email: "cake@fake.com",
+					password: "foo",
+					passwordConfirm: "foo",
+				});
+
+			expect(res.status).to.equal(400);
+			expect(res.header["content-type"]).toMatch(/json/);
+			expect(res.body).toMatchObject({ error: {} });
+		});
+
 		describe("should send BAD REQUEST when inputs are invalid", () => {
 			it("missing confirm password", async () => {
 				const res = await request(app)
@@ -40,6 +61,8 @@ describe("/user/signup", () => {
 					});
 
 				expect(res.status).to.equal(400);
+				expect(res.header["content-type"]).toMatch(/json/);
+				expect(res.body).toMatchObject({ errors: {} });
 			});
 
 			it("unequal password and password confirm", async () => {
@@ -53,6 +76,8 @@ describe("/user/signup", () => {
 					});
 
 				expect(res.status).to.equal(400);
+				expect(res.header["content-type"]).toMatch(/json/);
+				expect(res.body).toMatchObject({ errors: {} });
 			});
 
 			it("invalid email", async () => {
@@ -66,6 +91,8 @@ describe("/user/signup", () => {
 					});
 
 				expect(res.status).to.equal(400);
+				expect(res.header["content-type"]).toMatch(/json/);
+				expect(res.body).toMatchObject({ errors: {} });
 			});
 		});
 	});

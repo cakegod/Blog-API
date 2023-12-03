@@ -48,6 +48,10 @@ const postSignup = [
 				.end();
 		}
 
+		if (await UserModel.exists({ email: req.body.email })) {
+			return res.status(400).json({ error: "The email already exists." });
+		}
+
 		const user = await UserModel.create({
 			email: req.body.email,
 			password: req.body.password,

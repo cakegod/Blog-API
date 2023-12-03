@@ -56,7 +56,7 @@ app.use((err: CHttpException, req: Request, res: Response) => {
 	res.locals.message = res.locals.error;
 
 	res.status(err.status || 500);
-	res.send("error");
+	res.json("error");
 });
 
 export default app;

@@ -92,9 +92,6 @@ const postPost = [
 
 		if (!errors.isEmpty()) {
 			return res.status(400).json({
-				title: req.body.title,
-				description: req.body.description,
-				content: req.body.content,
 				errors: errors.array(),
 			});
 		}
@@ -130,7 +127,6 @@ const getPost = async (req: Request, res: Response) => {
 const putPost = [
 	// check if action is present
 	(req: Request, _res: Response, next: NextFunction) => {
-		console.log(req.body);
 		if (req.body?.status) {
 			next("route");
 		} else {
