@@ -1,12 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
-import createHttpError from "http-errors";
 import logger from "morgan";
 import helmet from "helmet";
 import dot from "dotenv";
 import cors from "cors";
 import blogRouter from "./api/posts/posts.routes";
 import userRouter from "./api/user/user.routes";
-import CHttpException from "./types";
 import passportConfig from "./setup/passport.setup";
 import { setupDB } from "./setup/database.setup";
 
@@ -43,20 +41,18 @@ passportConfig();
 app.use("/posts", blogRouter);
 app.use("/user", userRouter);
 
-/* --- CATCH 404 --- */
-app.use((_req: Request, _res: Response, next: NextFunction) => {
-	next(createHttpError(404));
+app.all("(.*)", (req: Request, res: Response) => {
+	res.status(404).json({ error: "Not Found" });
 });
 
 /* --- ERROR HANDLE --- */
-app.use((err: CHttpException, req: Request, res: Response) => {
-	if (req.app.get("env") === "development") {
-		res.locals.error = err;
-	} else res.locals.error = {};
-	res.locals.message = res.locals.error;
-
-	res.status(err.status || 500);
-	res.json("error");
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+	res.status(500).json({
+		errors: {
+			message: err.message,
+			error: req.app.get("env") === "development" ? err : {},
+		},
+	});
 });
 
 export default app;

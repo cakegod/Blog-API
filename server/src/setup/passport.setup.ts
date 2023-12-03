@@ -1,5 +1,4 @@
 import { Strategy as LocalStrategy } from "passport-local";
-import bcrypt from "bcryptjs";
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { UserModel } from "../api/user/user.model";
@@ -19,7 +18,7 @@ const passportConfig = () => {
 						});
 					}
 
-					if (!(await bcrypt.compare(password, user.password))) {
+					if (await user.isPasswordValid(password)) {
 						return done(null, false, {
 							message: "Incorrect password",
 						});
@@ -51,19 +50,6 @@ const passportConfig = () => {
 			},
 		),
 	);
-
-	// passport.serializeUser((user: PassportUser, done) => {
-	// 	done(null, user.id);
-	// });
-	//
-	// passport.deserializeUser(async (id, done) => {
-	// 	try {
-	// 		const user = await UserModel.findById(id);
-	// 		done(null, user);
-	// 	} catch (err) {
-	// 		done(err);
-	// 	}
-	// });
 };
 
 export default passportConfig;

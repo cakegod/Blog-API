@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { check, query, validationResult } from "express-validator";
 import { PostModel } from "./posts.model";
 import { LIMIT, PAGE, SORT_VALUES, STATUS_STATES } from "./posts.constants";
+import { CustomPostsRequest, Query } from "./posts.types";
 
 const validatePost = () => [
 	check("title", "Title must not be empty").not().isEmpty().trim().escape(),
@@ -16,23 +17,6 @@ const validatePost = () => [
 		.trim()
 		.escape(),
 ];
-
-type Status = (typeof STATUS_STATES)[number];
-type Sort = (typeof SORT_VALUES)[number];
-
-interface CustomPostsRequest extends Request {
-	query: {
-		limit: string;
-		page: string;
-		status: Status;
-		offset: string;
-		sort: Sort;
-	};
-}
-
-type Query = {
-	status?: Status;
-};
 
 const validateQueries = () => [
 	query(

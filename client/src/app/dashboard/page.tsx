@@ -1,6 +1,7 @@
 import Post from '@/components/blog/dashboard/Post';
 import { PostProps } from '@/types';
 import React from 'react';
+import { IsAuth } from '@/util/isAuth';
 
 async function fetchPosts(): Promise<PostProps[]> {
   const res = await fetch(`${process.env.URL}/posts`);
@@ -23,4 +24,4 @@ async function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default IsAuth(Dashboard);

@@ -1,9 +1,10 @@
 'use client';
 import FormInput from '@/components/blog/contact/FormInput';
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from '@/util/hooks';
 
 function Form() {
-  const [formData, setFormData] = useState([
+  const { formData, handleInput } = useForm([
     {
       name: 'email',
       value: '',
@@ -27,23 +28,11 @@ function Form() {
     },
   ]);
 
-  const handleInput = (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setFormData(
-      formData.map((input) => {
-        if (e.currentTarget.name === input.name) {
-          return { ...input, value: e.currentTarget.value };
-        }
-        return input;
-      }),
-    );
-  };
   return (
     <div>
-      <form action='post' className='space-y-8' name='contact-form'>
+      <form action='POST' className='space-y-8' name='contact-form'>
         {formData.map((input) => (
-          <FormInput data={input} handleInput={handleInput} key={input.name} />
+          <FormInput {...input} handleInput={handleInput} key={input.name} />
         ))}
         <button
           type='submit'

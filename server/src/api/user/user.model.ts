@@ -1,11 +1,20 @@
 import { InferSchemaType, model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-const UserSchema = new Schema({
-	email: { type: String, required: true, unique: true },
-	password: { type: String, required: true },
-	admin: { type: Boolean, default: false },
-});
+const UserSchema = new Schema(
+	{
+		email: { type: String, required: true, unique: true },
+		password: { type: String, required: true },
+		admin: { type: Boolean, default: false },
+	},
+	{
+		methods: {
+			async isPasswordValid(password) {
+				return !(await bcrypt.compare(password, this.password));
+			},
+		},
+	},
+);
 
 UserSchema.pre("save", async function (next) {
 	this.password = await bcrypt.hash(this.password, 10);

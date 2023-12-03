@@ -7,7 +7,7 @@ import jsx from 'react-syntax-highlighter/dist/cjs/languages/prism/jsx';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
 import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
-import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import rehypeRaw from 'rehype-raw';
 import { PostProps } from '@/types';
 
@@ -25,12 +25,12 @@ function ArticleContent({ post }: Props) {
   return (
     <ReactMarkdown
       components={{
-        code({ node, inline, className, children, ...props }) {
+        code({ node, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
-          return !inline && match ? (
+          return match ? (
             <SyntaxHighlighter
-              style={dracula}
-              language={'jsx'}
+              style={atomDark}
+              language={match[1]}
               wrapLongLines={true}
               PreTag='div'
               // {...props}

@@ -1,22 +1,15 @@
 import React from 'react';
-
-interface Props {
-  data: {
-    name: string;
-    value: string;
-    label: string;
-    placeholder: string;
-    textarea: boolean;
-  };
-  handleInput: (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
-}
+import type { FormData, InputHandler } from '@/types/index';
 
 function FormInput({
-  data: { name, label, placeholder, textarea, value },
+  name,
+  label,
+  placeholder,
+  textarea,
+  value,
+  type,
   handleInput,
-}: Props) {
+}: FormData & InputHandler) {
   return (
     <div className='sm:col-span-2'>
       <label
@@ -37,6 +30,7 @@ function FormInput({
       ) : (
         <input
           name={name}
+          type={type ?? 'text'}
           aria-label={name}
           value={value}
           onChange={handleInput}
